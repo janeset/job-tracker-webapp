@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>Job Line</title>
-<meta name="description" content="Job Line in your browser: your job tracker, tailored resumes and cover letters, with a free chat or a local model.">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='tile' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233B82F6'/%3E%3Cstop offset='1' stop-color='%231D4ED8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23tile)'/%3E%3Ccircle cx='10.5' cy='23.25' r='1.6' fill='%23fff' opacity='.55'/%3E%3Cpath d='M10.5 23.25h6.5a4 4 0 0 0 4-4V15' fill='none' stroke='%23fff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='21' cy='9.75' r='2.6' fill='%23fff'/%3E%3C/svg%3E">
+<title>Job tracker</title>
+<meta name="description" content="Job tracker in your browser: your job tracker, tailored resumes and cover letters, with a free chat or a local model.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='t' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234F7CFF'/%3E%3Cstop offset='1' stop-color='%237C4DFF'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23t)'/%3E%3Cg fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.5 8.5v9.5a4 4 0 0 1-7.6 1.75' stroke-width='3.4'/%3E%3Cpath d='M19 9.5h6.5M19 14h6.5M19 18.5h4.5' stroke-width='2.4'/%3E%3C/g%3E%3C/svg%3E">
 <script>/* the saved look (Settings, Appearance), applied before the page draws so it never flashes */
 (function(){try{var r=document.documentElement,g=function(k){return localStorage.getItem("jobline-"+k)},t=g("theme"),a=g("accent"),z=g("scale"),m=g("motion");
 if(t&&t!=="system")r.setAttribute("data-theme",t);if(a&&a!=="auto")r.setAttribute("data-accent",a);if(z&&z!=="m")r.setAttribute("data-scale",z);if(m==="reduce")r.setAttribute("data-motion","reduce")}catch(e){}})();</script>
@@ -14,7 +14,7 @@ if(t&&t!=="system")r.setAttribute("data-theme",t);if(a&&a!=="auto")r.setAttribut
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap" rel="stylesheet">
 <style>
-/* Job Line, Django edition. Design language: calm, spacious, SF-style type, frosted glass, soft depth.
+/* Job tracker, Django edition. Design language: calm, spacious, SF-style type, frosted glass, soft depth.
    --amber is the accent colour (Apple blue). Every theme redefines the tokens below. */
 :root{
   --bg:#F5F5F7;--panel:#FFFFFF;--panel2:#F5F5F7;--ink:#1D1D1F;--muted:#6E6E73;--line:rgba(0,0,0,.09);
@@ -898,9 +898,12 @@ html[data-motion="reduce"]::view-transition-group(*),html[data-motion="reduce"]:
 /* ---------- Logo and icons ---------- */
 h1:has(.logo)::before{display:none}
 h1 .logo{width:26px;height:26px;flex:none;display:block}
-.logo-tile{fill:var(--accent-fill,var(--amber))}
-.logo-line{fill:none;stroke:var(--on-amber);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.logo-dot{fill:var(--on-amber)}
+.logo-j,.logo-lines{fill:none;stroke:#fff;stroke-linecap:round;stroke-linejoin:round}
+.logo-j{stroke-width:3.4}
+.logo-lines{stroke-width:2.4}
+/* "Job tracker": "tracker" in the logo's blue-to-violet, deeper on light themes so it stays readable */
+.wordmark > span{background:linear-gradient(90deg,light-dark(#3B63E8,#5B8CFF),light-dark(#6A3DE8,#8F70FF));-webkit-background-clip:text;background-clip:text;color:transparent}
+@media (forced-colors:active){.wordmark > span{background:none;color:CanvasText}}
 .ic{width:15px;height:15px;flex:none;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .btn .ic{margin-left:-2px;opacity:.9}
 .btn.small .ic{width:14px;height:14px}
@@ -975,7 +978,134 @@ body.in-company #resumepage{display:none}
 .rstext summary{cursor:pointer;font-weight:600}
 .rstext pre{margin:12px 0 0;max-height:420px;overflow:auto;white-space:pre-wrap;font:13px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--panel2);border-radius:10px;padding:14px 16px;color:var(--ink)}
 @media (max-width:760px){.rsgrid{grid-template-columns:1fr}}
-/* Job Line, Django edition: the refreshed look (2026). Loaded after app.css and features.css.
+
+/* Requirements, matches and gaps as short points (notesHtml in app.js) */
+.sec ul.pts{margin:0;padding:0;list-style:none;max-width:68ch;display:grid;gap:7px}
+.sec ul.pts li{position:relative;padding-left:18px;line-height:1.5}
+.sec ul.pts li::before{content:"";position:absolute;left:3px;top:.62em;width:6px;height:6px;border-radius:50%;background:var(--muted);opacity:.7}
+.sec ul.pts ul.sub,.sec ul.pts ul.sub li{font-size:inherit}
+.sec ul.pts ul.sub{margin:5px 0 0;padding:0;list-style:none;display:grid;gap:4px}
+.sec ul.pts ul.sub li::before{background:none;border:1.5px solid var(--muted);width:5px;height:5px}
+/* Section titles take the colour of their dot: asked for (blue), matches (green), gaps (red), as in the skill chips */
+.sec.ask h3{color:var(--blue)}
+.sec.good h3{color:var(--green)}
+.sec.gap h3{color:var(--red)}
+
+/* Job page: slim title bar that slides in once the big title scrolls away (renderDetail, dbarSync). It takes no room. */
+.dbar{position:sticky;top:0;z-index:6;height:0}
+.dbar-in{position:absolute;left:0;right:0;top:0;display:flex;align-items:center;gap:12px;padding:10px 18px 10px 22px;
+  background:color-mix(in srgb,var(--panel) 96%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);box-shadow:0 6px 18px -12px rgba(0,0,0,.45);
+  opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.dbar.on .dbar-in{opacity:1;transform:none;pointer-events:auto}
+.dbar-t{display:flex;flex-direction:column;min-width:0;flex:1;line-height:1.25}
+.dbar-t .co{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbar-t b{font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dbar .btn{flex:none}
+@media (prefers-reduced-motion:reduce){.dbar-in{transition:none}}
+
+/* Job page actions (renderDetail): the two main steps side by side, the helpers in an even two-column grid (a lone last
+   one spans both), and Hide this company as a quiet link at the end */
+.acts{flex-direction:column;align-items:stretch;gap:10px}
+.acts-main,.acts-more{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.acts-main:empty{display:none}
+.acts-main > :only-child,.acts-more > :last-child:nth-child(odd){grid-column:1/-1}
+.acts-main .btn,.acts-more .btn{justify-content:center;text-align:center;min-width:0;white-space:normal;height:auto;min-height:38px;padding-top:7px;padding-bottom:7px;line-height:1.25}
+.acts-foot{display:flex;justify-content:flex-end;margin-top:-2px}
+.acts-foot .btn{font-size:13px}
+@media (max-width:420px){.acts-main,.acts-more{grid-template-columns:1fr}.acts-more > :last-child:nth-child(odd){grid-column:auto}}
+
+/* Interview prep: the section (renderInterviews) and the highlighted button on the job page */
+#interviews{display:none}
+body[data-view="interviews"] #interviews{display:block}
+body.in-company #interviews{display:none}   /* the company page shows instead, under this tab */
+body[data-view="interviews"] .line,body[data-view="interviews"] .main,body[data-view="interviews"] .breakdown,body[data-view="interviews"] .intro,body[data-view="interviews"] .vhead-tracker{display:none}
+.ivgroup{padding:20px 22px;margin-top:14px}
+.ivgroup.hot{border-color:color-mix(in srgb,var(--amber) 45%,var(--line))}
+.ivgroup h3{display:flex;align-items:center;gap:8px;margin:0}
+.ivgroup > .note,.ivgroup summary .note{margin:2px 0 12px}
+.ivgroup summary{cursor:pointer;list-style:none}
+.ivgroup summary::-webkit-details-marker{display:none}
+.ivgroup summary h3::after{content:"Show";margin-left:auto;font-size:12px;font-weight:500;color:var(--muted)}
+.ivgroup[open] summary h3::after{content:"Hide"}
+.ivn{display:inline-grid;place-items:center;min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:var(--panel2);color:var(--muted);font-size:12px;font-weight:600}
+.ivlist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ivrow{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--line);border-radius:10px}
+.ivmain{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ivco{font-size:12.5px;color:var(--muted)}
+.ivmain b{overflow-wrap:anywhere}
+.ivmeta{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:4px;font-size:12.5px}
+.ivst{padding:1px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.ivst.hot{color:var(--green);border-color:color-mix(in srgb,var(--green) 40%,transparent)}
+.ivok{display:inline-flex;align-items:center;gap:4px;color:var(--green)}
+.ivrow .btn{flex:none}
+@media (max-width:520px){.ivrow{flex-direction:column;align-items:stretch}}
+.btn.prep-hi{background:color-mix(in srgb,var(--amber) 14%,transparent);border-color:color-mix(in srgb,var(--amber) 55%,transparent);color:var(--ink);font-weight:600}
+.btn.prep-hi .ic{color:var(--amber)}
+.btn.prep-hi:hover{background:color-mix(in srgb,var(--amber) 22%,transparent)}
+.prep-soon{margin-left:6px;padding:1px 7px;border-radius:999px;background:var(--amber-fill,var(--accent-fill,var(--amber)));color:var(--on-amber);font-size:11px;font-weight:600}
+
+/* Interview prep: How it works (renderInterviews) */
+.ivhow{padding:20px 22px;margin-top:14px}
+.ivhow h3{margin:0 0 14px}
+.ivhow ol{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.ivhow li{display:flex;gap:12px;align-items:flex-start}
+.ivhow li > div{display:flex;flex-direction:column;gap:4px;min-width:0}
+.ivhow li > div > span{color:var(--muted);font-size:13.5px;line-height:1.5}
+.ivhow li > div > span b{color:var(--ink);font-weight:600}
+.ivhow .hnum{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--amber) 16%,transparent);color:var(--amber);font-weight:700;font-size:13px}
+@media (max-width:760px){.ivhow ol{grid-template-columns:1fr;gap:14px}}
+
+/* Company page: two subtabs, Company and role / Interview questions (renderCompany, bindCvTabs) */
+.cvtabs{display:flex;gap:4px;margin:18px 0 6px;border-bottom:1px solid var(--line);overflow-x:auto}
+.cvtabs [role=tab]{display:inline-flex;align-items:center;gap:8px;border:0;background:none;padding:11px 16px;margin-bottom:-1px;color:var(--muted);font:inherit;font-weight:600;font-size:15px;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.cvtabs [role=tab]:hover{color:var(--ink)}
+.cvtabs [role=tab][aria-selected="true"]{color:var(--ink);border-bottom-color:var(--amber)}
+.cvtabs [role=tab][aria-selected="true"] .ic{color:var(--amber)}
+.cvtabs .ivn{margin-left:2px}
+.cvpanel[hidden]{display:none}
+.cvpanel > .prep{margin-top:12px;padding:0;background:none;border:0;box-shadow:none}
+/* Interview questions: each section's title in its own colour (--k, from PREP_META in app.js), with an icon */
+.pcard{border-top:3px solid var(--k,var(--line))}
+.pcard h4{display:flex;align-items:center;gap:10px;color:var(--k,var(--ink));font-size:16px;margin:0 0 4px}
+.pkic{display:inline-grid;place-items:center;flex:none;width:30px;height:30px;border-radius:9px;background:color-mix(in srgb,var(--k,var(--ink)) 15%,transparent);color:var(--k,var(--ink))}
+.pkic .ic{width:16px;height:16px}
+.pknote{margin:0 0 10px 40px!important;color:var(--muted);font-size:13px}
+.pcard:first-child{background:color-mix(in srgb,var(--k,var(--amber)) 7%,var(--panel2))}
+.pcard:first-child > p:not(.pknote){font-size:16px;line-height:1.6}
+.pq{list-style:none;padding-left:0}
+.pqrow{align-items:center}
+.pqn{flex:none;display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:color-mix(in srgb,var(--k,var(--blue)) 14%,transparent);color:var(--k,var(--blue));font-weight:700;font-size:12.5px}
+.pqt{flex:1;min-width:0}
+.pq .pbox{margin-left:38px}
+.pans{display:block;margin-top:4px;color:var(--muted);font-size:12.5px}
+
+/* Company page layout: one grid. At a glance, Direction and Look it up yourself share the top row; every other section
+   runs the full width, with What this role needs last. (.cvmain and .cvside only group the markup.) */
+.cv{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.cvmain,.cvside{display:contents}
+#briefOut > *{grid-column:1/-1}
+#briefOut > .card:nth-child(1){grid-column:1;grid-row:1}
+#briefOut > .card:nth-child(2){grid-column:2;grid-row:1}
+#briefOut > .card:nth-child(-n+2){align-self:stretch}   /* the top row ends level, whatever the links card's height */
+#briefOut > .card.wide:nth-child(-n+2){grid-column:1/3}
+#briefOut > :not(.card){grid-column:1/3}
+.cv .cvlinks{grid-column:3;grid-row:1}
+.cv .cvneeds{grid-column:1/-1}
+@media (max-width:1060px){
+  .cv{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cv .cvlinks{grid-column:1/-1;grid-row:auto}
+  #briefOut > :not(.card),#briefOut > .card.wide:nth-child(-n+2){grid-column:1/-1}
+}
+@media (max-width:700px){
+  .cv{grid-template-columns:1fr}
+  #briefOut > .card:nth-child(1),#briefOut > .card:nth-child(2){grid-column:1;grid-row:auto}
+}
+/* The subtabs stay in view while scrolling, with the briefing's section chips just under them */
+.cvtabs{position:sticky;top:var(--topbar-h,0px);z-index:7;background:var(--bg);overflow-y:hidden;scrollbar-width:none}
+#cvpanel-info .toc{top:calc(var(--topbar-h,0px) + 48px)}
+#briefOut .card{scroll-margin-top:calc(var(--topbar-h,0px) + 120px)}
+/* Job tracker, Django edition: the refreshed look (2026). Loaded after app.css and features.css.
    Calm and precise, after Linear, Vercel and Stripe: hairline borders, soft depth, colour only where it means something.
    Themes are generated by design/themes.py (base tokens); the soft colours below are derived from them. */
 
@@ -1668,7 +1798,7 @@ header.top .views{justify-self:stretch}
 @media (max-width:560px){.sltways li{grid-template-columns:auto 1fr}.sltways .btn{grid-column:2;justify-self:start}}
 
 /* a row under the tabs: the resume (left) and job tracker file (right) in use (07-ui.js). The listings line under
-   "Job Line" is replaced by it and stays for screen readers; the old tracker chip in the header is gone too. */
+   "Job tracker" is replaced by it and stays for screen readers; the old tracker chip in the header is gone too. */
 header.top #sub{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 header.top .tools .btn.trk{display:none}
 .inuse{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:6px 24px;min-width:0;margin-top:2px;padding-top:8px;border-top:1px solid var(--line)}
@@ -1775,7 +1905,7 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
 /* How to use, side panel: it sticks just under the header (07-ui.js measures it into --topbar-h); one tidy row of
    tools: just Compact; compact shows the arrow only */
 .gpanel{top:calc(var(--topbar-h,110px) + 14px);max-height:calc(100vh - var(--topbar-h,110px) - 28px)}
-.guide,.gsec{scroll-margin-top:calc(var(--topbar-h,110px) + 14px)}
+.guide,.gsec,#search .sform,#slTrkCard,#prepSec{scroll-margin-top:calc(var(--topbar-h,110px) + 14px)}
 .gtools{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;padding:2px 0 10px}
 .gtool{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--muted);
   font:500 .75rem/1 var(--font);border-radius:7px;cursor:pointer;white-space:nowrap;-webkit-user-select:none;user-select:none}
@@ -1785,13 +1915,47 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
 .guide.compact .gtools{justify-content:center}
 .guide.compact .gcompact .glabel{display:none}
 .guide.compact .gcompact .garrow{transform:rotate(180deg)}
+
+/* How to use, side panel: no counts; the group titles (Get set up, Find and apply, More) bold in the accent purple */
+.gpanel .gn,.gpanel .gcount{display:none}
+.gpanel .ghead{color:var(--accent);font-weight:700;letter-spacing:.06em}
+.gpanel .ghead:hover{color:color-mix(in srgb,var(--accent) 80%,var(--text))}
+
+/* Job page (Applications, right side). It sticks just under the top bar instead of sliding beneath it, and reads as one
+   clean sheet: flat sections split by hairlines (no cards inside the card), a framed facts grid, and the slim title bar
+   (.dbar, features.css) in this look's glass. On phones it is the full-screen page from app.css, so leave it alone there. */
+@media (min-width:881px){
+  .detail .back{display:none}   /* the list is right beside it; on phones it's the way back */
+  .panel.detail{top:calc(var(--topbar-h,110px) + 14px);max-height:calc((100vh - var(--topbar-h,110px) - 28px) / var(--z,1))}
+}
+.panel.detail{padding:0;scrollbar-width:thin;scrollbar-color:var(--line-strong) transparent}
+.detail .back{margin:14px 22px 0}
+.detail .dhead{padding:26px 26px 22px;border-bottom:0}
+.detail .dhead .co{font-size:.9rem;font-weight:600;color:var(--accent)}
+.detail .dhead h2{margin:4px 0 18px;overflow-wrap:anywhere}
+.detail .facts{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:14px 18px;padding:16px 18px;
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--radius-sm);overflow-wrap:anywhere}
+.detail .facts div span{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:3px}
+.detail .acts{padding:0 26px 22px;border-bottom:1px solid var(--line);background:none;gap:8px}
+.detail .sec{margin:0;padding:22px 26px;border:0;border-bottom:1px solid var(--line);border-radius:0;box-shadow:none;
+  background:none;-webkit-backdrop-filter:none;backdrop-filter:none;overflow-wrap:anywhere}
+.detail .sec:last-child{border-bottom:0}
+.detail .sec h3{margin:0 0 12px}
+.detail .sec ul.pts{gap:8px}
+.detail .dbar-in{padding:10px 18px 10px 26px;background:color-mix(in srgb,var(--surface) 96%,transparent);border-bottom-color:var(--line)}
+.detail .dbar-t .co{color:var(--accent);font-weight:600}
+@media (max-width:600px){.detail .dhead,.detail .sec{padding-left:18px;padding-right:18px}.detail .acts{padding:0 18px 18px}}
+@media (max-width:880px){.panel.detail{top:var(--topbar-h,110px);background:var(--surface)}}   /* the full-screen job page starts below the top bar, not under it */
+
+/* Company page, Interview questions: keep each section's coloured top edge over this look's card border */
+.cvpanel .pcard{border-top:3px solid var(--k,var(--line))}
 </style>
 </head>
 <body data-view="home">
 <div class="wrap">
   <header class="top">
     <div>
-      <h1><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" class="logo-tile"/><rect width="32" height="32" rx="9" fill="url(#jl-shine)"/><circle cx="10.5" cy="23.25" r="1.6" class="logo-dot" opacity=".55"/><path d="M10.5 23.25h6.5a4 4 0 0 0 4-4V15" class="logo-line"/><circle cx="21" cy="9.75" r="2.6" class="logo-dot"/><defs><linearGradient id="jl-shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs></svg>Job Line</h1>
+      <h1><svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="jt-tile" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4F7CFF"/><stop offset="1" stop-color="#7C4DFF"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#jt-tile)"/><path d="M14.5 8.5v9.5a4 4 0 0 1-7.6 1.75" class="logo-j"/><path d="M19 9.5h6.5M19 14h6.5M19 18.5h4.5" class="logo-lines"/></svg><span class="wordmark">Job <span>tracker</span></span></h1>
       <div class="sub" id="sub">Loading your listings…</div>
     </div>
     <nav class="views" aria-label="Sections">
@@ -1799,12 +1963,13 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
       <button type="button" data-view="resume">Resume</button>
       <button type="button" data-view="search">Find jobs</button>
       <button type="button" data-view="tracker">Applications</button>
+      <button type="button" data-view="interviews">Interview prep</button>
       <button type="button" data-view="offers">Offers</button>
     </nav>
     <div class="tools">
       <button class="btn trk" id="trackerBtn" type="button"></button>
-      <button class="btn mode" id="modeBtn" type="button" title="Which AI mode Job Line is using. Click to change it in Settings."></button>
-      <button class="btn" id="guideBtn" type="button" title="How to use Job Line">Guide</button>
+      <button class="btn mode" id="modeBtn" type="button" title="Which AI mode Job tracker is using. Click to change it in Settings."></button>
+      <button class="btn" id="guideBtn" type="button" title="How to use Job tracker">Guide</button>
       <button class="btn" id="settingsBtn" type="button">Settings</button>
     </div>
   </header>
@@ -1876,8 +2041,9 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
   <section id="company" aria-live="polite"></section>
   <section id="resumepage" aria-label="Resume"></section>
   <section id="search" aria-label="Find jobs"></section>
+  <section id="interviews" aria-label="Interview prep"></section>
   <section id="offers" aria-label="Offers"></section>
-  <section id="guide" aria-label="How to use Job Line"></section>
+  <section id="guide" aria-label="How to use Job tracker"></section>
 </div>
 <div class="toast hidden" id="toast" role="status"></div>
 <dialog id="chatDlg" aria-labelledby="chatTitle">
@@ -1887,7 +2053,7 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
     <li>Paste it in and send. <span id="chatWebHint"></span></li>
     <li>Copy the whole reply and paste it below.</li>
   </ol>
-  <p class="note hidden" id="chatPriv" style="margin:0 0 8px">Your name, email, phone, address and links were replaced with placeholders in this prompt. Job Line puts them back when you paste the reply.</p>
+  <p class="note hidden" id="chatPriv" style="margin:0 0 8px">Your name, email, phone, address and links were replaced with placeholders in this prompt. Job tracker puts them back when you paste the reply.</p>
   <label class="inline hidden" id="chatAltRow"><input type="checkbox" id="chatAlt" checked> <span id="chatAltLabel"></span></label>
   <label>The prompt<textarea id="chatPrompt" readonly rows="5"></textarea></label>
   <div class="row2"><button class="btn small" type="button" id="chatCopy">Copy prompt</button><span class="note" id="chatCopied"></span></div>
@@ -1906,9 +2072,9 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
     </div>
     <div class="spane" data-pane="general">
     <fieldset>
-      <legend>Opening Job Line</legend>
+      <legend>Opening Job tracker</legend>
       <label>Open in<select id="brSel"></select></label>
-      <label class="inline"><input type="checkbox" id="brAuto"> Open automatically when Job Line starts</label>
+      <label class="inline"><input type="checkbox" id="brAuto"> Open automatically when Job tracker starts</label>
       <div class="row2"><button class="btn small" type="button" id="brTest">Open in this browser now</button><span class="note" id="brOut"></span></div>
       <p class="note" style="margin:0">Only browsers found on this computer are listed. You can always go to <b id="brUrl"></b> in any browser.</p>
     </fieldset>
@@ -1921,7 +2087,7 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
         <label><input type="radio" name="prov" value="local"> Local model</label>
       </div>
       <div class="pv" data-p="manual">
-        <p class="note" style="margin:0">No key needed. Works with a free ChatGPT or Claude account. Job Line writes the full prompt for you. You paste it into the chat, then paste the reply back here. It does the rest: formatting, saving, Word and PDF files.</p>
+        <p class="note" style="margin:0">No key needed. Works with a free ChatGPT or Claude account. Job tracker writes the full prompt for you. You paste it into the chat, then paste the reply back here. It does the rest: formatting, saving, Word and PDF files.</p>
         <p class="note" style="margin:0">For company research and finding jobs, switch on the chat’s web search so it can look things up. Always check a posting before you apply.</p>
       </div>
       <div class="pv" data-p="anthropic">
@@ -1993,14 +2159,14 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
     <div class="spane hidden" data-pane="files">
       <fieldset>
         <legend>Local files</legend>
-        <p class="note" style="margin:0">Everything Job Line reads and writes lives in your JobLine folder. These buttons open things in your file manager, or in Excel for the tracker.</p>
+        <p class="note" style="margin:0">Everything Job tracker reads and writes lives in your JobLine folder. These buttons open things in your file manager, or in Excel for the tracker.</p>
         <div class="filelist" id="fileList"></div>
       </fieldset>
     </div>
     <div class="spane hidden" data-pane="prompts">
       <fieldset>
         <legend>Prompts for free ChatGPT and Claude</legend>
-        <p class="note" style="margin:0">Copy a prompt, paste it into a chat, and the chat creates or updates your tracker spreadsheet. Each prompt already contains your tracker’s exact layout and your search settings, so the file it makes works in Job Line.</p>
+        <p class="note" style="margin:0">Copy a prompt, paste it into a chat, and the chat creates or updates your tracker spreadsheet. Each prompt already contains your tracker’s exact layout and your search settings, so the file it makes works in Job tracker.</p>
         <div class="row2"><a class="btn small" href="https://chatgpt.com/" target="_blank" rel="noopener">Open ChatGPT</a><a class="btn small" href="https://claude.ai/new" target="_blank" rel="noopener">Open Claude</a><label class="inline"><input type="checkbox" id="pmResume" checked> Put my resume text in the prompts</label></div>
         <p class="note" id="pmPriv" style="margin:0"></p>
         <div id="promptList" class="plist"></div>
@@ -2009,18 +2175,18 @@ button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;use
         <legend>Got rows back from the chat?</legend>
         <label>Paste the chat’s reply. It works with a JSON list of jobs, or a single job.<textarea id="rowsIn" placeholder="Paste the reply here"></textarea></label>
         <div class="row2"><button class="btn small primary" type="button" id="rowsAdd">Add to my tracker</button><span class="note" id="rowsOut"></span></div>
-        <p class="note" style="margin:0">If the chat gave you an Excel file instead, save it into the tracker folder. Job Line uses the newest spreadsheet there.</p>
+        <p class="note" style="margin:0">If the chat gave you an Excel file instead, save it into the tracker folder. Job tracker uses the newest spreadsheet there.</p>
       </fieldset>
     </div>
     <div class="row2 end"><button class="btn" value="cancel" type="button" id="setCancel">Cancel</button><button class="btn primary" type="button" id="setSave">Save settings</button></div>
   </form>
 </dialog>
-<!-- Job Line, static edition. Built by tools/sync_projects.py in the Flask project: edit the sources, not this file. -->
-<script>window.JL_GUIDE={"sections": [{"id": "start", "title": "Start Job Line", "intro": "This edition of Job Line is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.", "steps": [{"text": "Open the jobline-static folder and double-click **index.html**. It opens in your browser. Chrome and Edge work best; Firefox and Safari work too."}, {"text": "Bookmark the page and use the same browser each time: your tracker, resumes and documents are kept in that browser."}, {"text": "On a fresh start the banner at the top says what is missing: a tracker, a resume and an AI mode. The next steps set up all three, in about five minutes.", "img": "01-first-run.jpg", "caption": "A fresh start: no tracker, no resume and no AI mode yet."}]}, {"id": "mode", "title": "Choose how Job Line uses AI", "intro": "Job Line can write tailored resumes and cover letters, research companies and search the web for jobs. Pick how it does that. You can change it any time.", "steps": [{"text": "Click **Settings** at the top right. On the **General** tab, find **Drafting with**. The badge next to Settings always shows the mode in use.", "img": "02-settings-free-chat.jpg", "caption": "Settings, General: the AI modes under Drafting with."}, {"text": "**Free chat (copy and paste)** needs no key and costs nothing. It works with a free ChatGPT or Claude account. Job Line writes each prompt for you: click **Copy prompt**, paste it into a new chat, copy the whole reply and paste it back into Job Line. It does the rest, from formatting to the Word and PDF files. Your name, email, phone and address are swapped for placeholders in the prompt and put back when you paste the reply."}, {"text": "**Local model** runs a free AI on your own computer with Ollama or LM Studio, so nothing leaves it. It can't search the web. Install one of them and let this page talk to it: for Ollama, set **OLLAMA_ORIGINS** to * and restart Ollama; in LM Studio, switch on **Enable CORS** in the server settings. Then enter the **Server address** (Ollama: http://localhost:11434/v1) and the **Model**, and click **Test connection**.", "img": "04-settings-local.jpg", "caption": "Local model: the address and model of Ollama or LM Studio."}, {"text": "Not sure? Start with **Free chat**. It costs nothing, and you can switch to a local model later without losing anything."}]}, {"id": "resume", "title": "Add your resume", "intro": "Everything Job Line writes for you is built from your own resume. It never invents experience you don't have.", "steps": [{"text": "In **Settings**, **General**, scroll to **Your resume** and click **Upload a resume**. A Word file (.docx) works best; a text-based PDF, .txt or .md also works. You can also use the **Upload resume** button in the banner."}, {"text": "Job Line keeps the text of your resume in this browser and shows which resume is in use. Your original file is never changed. You can upload several resumes and pick a different one for a particular job.", "img": "05-resume.jpg", "caption": "Your resume, ready to use."}]}, {"id": "tracker", "title": "Create your tracker", "intro": "Your tracker is an Excel file with every job you're considering and where each application stands. Job Line reads it and keeps it up to date.", "steps": [{"text": "In **Settings**, open **Local files** and click **Create a new tracker**. Job Line makes a ready-to-use spreadsheet, with dropdowns, colours and a summary sheet. To keep it on your computer, use **Save as a file** (Chrome and Edge) or **Download tracker** in the bar under the header.", "img": "06-create-tracker.jpg", "caption": "Settings, Local files: create the tracker, or open its folder."}, {"text": "Already have a tracker? Click **Open a tracker file** (in the banner, or in Settings, Local files) and choose your Job_Search_Tracker.xlsx. In Chrome and Edge, Job Line stays linked to the file and saves every change straight into it. In other browsers, a bar under the header reminds you to **Download tracker** after making changes."}, {"text": "You can open the tracker in Excel at any time. Close it again before you make changes in Job Line. When the file is linked, changes you save in Excel show up in Job Line within a few seconds."}, {"text": "Once the tracker has jobs in it, Home shows what to do next: roles waiting for you, follow-ups that are due and recent changes.", "img": "07-home.jpg", "caption": "Home, once your tracker has jobs."}]}, {"id": "find", "title": "Find jobs", "intro": "Open **Find jobs**. Job Line writes a search prompt for a free ChatGPT or Claude chat, which searches the web for you. Drafting keeps the AI mode from Settings.", "steps": [{"text": "Fill in **What you're looking for**: roles or keywords, where, how far, work model, how recent, minimum pay and how many results.", "img": "08-find-jobs.jpg", "caption": "Find jobs: your search settings."}, {"text": "**GPT/Claude prompts** works with a free chat. Click **Write the search prompt**, copy it into ChatGPT or Claude with web search switched on, paste the whole reply back and click **Generate tracker**.", "img": "10-chat-prompt.jpg", "caption": "GPT/Claude prompts: copy the prompt, paste the reply."}, {"text": "Results show the fit with your resume, what they ask for and any gaps. Tick the ones you like and click **Add to tracker**, or **Generate tracker** to save them as a new tracker file. Each result links to the real posting: check it before you apply.", "img": "11-results.jpg", "caption": "Results, ready to add to your tracker."}, {"text": "Found a job yourself? Paste it under **Add a posting you found** and Job Line fills in the details and the fit for you."}]}, {"id": "apply", "title": "Apply", "intro": "**Applications** lists every job in your tracker, best to apply for first, with where each one stands.", "steps": [{"text": "Click a job to see what they ask for, where your resume matches and the gaps to cover. Use the filters and sort to narrow the list.", "img": "12-applications.jpg", "caption": "Applications: the list and one job's details."}, {"text": "**Draft cover letter** and **Craft resume** write versions tailored to this job, using only what's in your resume. Each one is made as a Word file and a PDF, kept with the job: **Download Word** and **Download PDF** save them to your computer, **Open PDF** shows it in a new tab and **Open folder** lists everything kept for the job. You can edit the text and save again.", "img": "13-drafts.jpg", "caption": "A tailored cover letter, saved as Word and PDF."}, {"text": "**Build the kit** does both at once, plus ready-to-paste answers to common application questions."}, {"text": "**Research the company** gives a briefing: what they do, what it's like to work there, how they interview and smart questions to ask. **Interview prep** adds practice questions with feedback on your answers.", "img": "14-research.jpg", "caption": "A company briefing."}, {"text": "After applying, click **Mark as applied today**. Keep the status, next step and follow-up date up to date: Job Line writes them into your tracker and reminds you on Home when a follow-up is due. **Follow-ups to calendar** adds the dates to your calendar."}]}, {"id": "offers", "title": "Compare offers", "intro": "When offers arrive, **Offers** puts them side by side.", "steps": [{"text": "Start from a job in your tracker or a blank offer, then add pay, bonus, benefits and anything else that matters. The best figure in each row is highlighted, and Job Line can help you prepare a negotiation.", "img": "16-offers.jpg", "caption": "Offers, side by side."}]}, {"id": "settings", "title": "Make it yours", "intro": "Settings has four tabs: General, Appearance, Local files and Prompts.", "steps": [{"text": "**Appearance** changes the theme (or matches your computer's light and dark), the accent colour, the text size and animations. Changes apply right away.", "img": "15-appearance.jpg", "caption": "Settings, Appearance."}, {"text": "**Prompts** has ready-made prompts for free ChatGPT and Claude: create a tracker, find jobs and add them, update your progress or check which listings are still open. Paste a chat's reply under **Got rows back from the chat?** to add the jobs to your tracker.", "img": "17-prompts.jpg", "caption": "Settings, Prompts: tracker prompts for free chats."}, {"text": "**General** also has hidden companies (their listings are left out everywhere), extra details to mention in drafts, and how many days to wait before a follow-up."}, {"text": "**Local files** opens or downloads your tracker, lists your documents and backs up everything Job Line keeps in this browser. Download a backup now and then: clearing your browsing data also clears Job Line."}]}, {"id": "help", "title": "If something isn't right", "intro": "", "steps": [{"text": "**\"Couldn't save into the file\"**: the tracker may be open in Excel. Close it there, then press **Save** in the bar under the header."}, {"text": "**Your changes in Excel don't show**: save the file in Excel. When the tracker is linked (Chrome and Edge), Job Line notices within a few seconds; otherwise open it again with **Open a tracker file**."}, {"text": "**A draft or search didn't work**: check the mode badge at the top, then use **Test connection** in Settings. In Free chat mode, make sure you pasted the whole reply."}, {"text": "**Something went wrong with the tracker**: Job Line keeps a copy before every change. Settings, Local files, **Open folder** next to Tracker folder lists them to download."}]}], "images": ["01-first-run.jpg", "02-settings-free-chat.jpg", "04-settings-local.jpg", "05-resume.jpg", "06-create-tracker.jpg", "07-home.jpg", "08-find-jobs.jpg", "10-chat-prompt.jpg", "11-results.jpg", "12-applications.jpg", "13-drafts.jpg", "14-research.jpg", "15-appearance.jpg", "16-offers.jpg", "17-prompts.jpg"]};</script>
+<!-- Job tracker, static edition. Built by tools/sync_projects.py in the Flask project: edit the sources, not this file. -->
+<script>window.JL_GUIDE={"sections": [{"id": "start", "title": "Start Job tracker", "intro": "This edition of Job tracker is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.", "steps": [{"text": "Open the jobline-static folder and double-click **index.html**. It opens in your browser. Chrome and Edge work best; Firefox and Safari work too."}, {"text": "Bookmark the page and use the same browser each time: your tracker, resumes and documents are kept in that browser."}, {"text": "On a fresh start the banner at the top says what is missing: a tracker, a resume and an AI mode. The next steps set up all three, in about five minutes.", "img": "01-first-run.jpg", "caption": "A fresh start: no tracker, no resume and no AI mode yet."}]}, {"id": "mode", "title": "Choose how Job tracker uses AI", "intro": "Job tracker can write tailored resumes and cover letters, research companies and search the web for jobs. Pick how it does that. You can change it any time.", "steps": [{"text": "Click **Settings** at the top right. On the **General** tab, find **Drafting with**. The badge next to Settings always shows the mode in use.", "img": "02-settings-free-chat.jpg", "caption": "Settings, General: the AI modes under Drafting with."}, {"text": "**Free chat (copy and paste)** needs no key and costs nothing. It works with a free ChatGPT or Claude account. Job tracker writes each prompt for you: click **Copy prompt**, paste it into a new chat, copy the whole reply and paste it back into Job tracker. It does the rest, from formatting to the Word and PDF files. Your name, email, phone and address are swapped for placeholders in the prompt and put back when you paste the reply."}, {"text": "**Local model** runs a free AI on your own computer with Ollama or LM Studio, so nothing leaves it. It can't search the web. Install one of them and let this page talk to it: for Ollama, set **OLLAMA_ORIGINS** to * and restart Ollama; in LM Studio, switch on **Enable CORS** in the server settings. Then enter the **Server address** (Ollama: http://localhost:11434/v1) and the **Model**, and click **Test connection**.", "img": "04-settings-local.jpg", "caption": "Local model: the address and model of Ollama or LM Studio."}, {"text": "Not sure? Start with **Free chat**. It costs nothing, and you can switch to a local model later without losing anything."}]}, {"id": "resume", "title": "Add your resume", "intro": "Everything Job tracker writes for you is built from your own resume. It never invents experience you don't have.", "steps": [{"text": "In **Settings**, **General**, scroll to **Your resume** and click **Upload a resume**. A Word file (.docx) works best; a text-based PDF, .txt or .md also works. You can also use the **Upload resume** button in the banner."}, {"text": "Job tracker keeps the text of your resume in this browser and shows which resume is in use. Your original file is never changed. You can upload several resumes and pick a different one for a particular job.", "img": "05-resume.jpg", "caption": "Your resume, ready to use."}]}, {"id": "tracker", "title": "Create your tracker", "intro": "Your tracker is an Excel file with every job you're considering and where each application stands. Job tracker reads it and keeps it up to date.", "steps": [{"text": "In **Settings**, open **Local files** and click **Create a new tracker**. Job tracker makes a ready-to-use spreadsheet, with dropdowns, colours and a summary sheet. To keep it on your computer, use **Save as a file** (Chrome and Edge) or **Download tracker** in the bar under the header.", "img": "06-create-tracker.jpg", "caption": "Settings, Local files: create the tracker, or open its folder."}, {"text": "Already have a tracker? Click **Open a tracker file** (in the banner, or in Settings, Local files) and choose your Job_Search_Tracker.xlsx. In Chrome and Edge, Job tracker stays linked to the file and saves every change straight into it. In other browsers, a bar under the header reminds you to **Download tracker** after making changes."}, {"text": "You can open the tracker in Excel at any time. Close it again before you make changes in Job tracker. When the file is linked, changes you save in Excel show up in Job tracker within a few seconds."}, {"text": "Once the tracker has jobs in it, Home shows what to do next: roles waiting for you, follow-ups that are due and recent changes.", "img": "07-home.jpg", "caption": "Home, once your tracker has jobs."}]}, {"id": "find", "title": "Find jobs", "intro": "Open **Find jobs**. Job tracker writes a search prompt for a free ChatGPT or Claude chat, which searches the web for you. Drafting keeps the AI mode from Settings.", "steps": [{"text": "Fill in **What you're looking for**: roles or keywords, where, how far, work model, how recent, minimum pay and how many results.", "img": "08-find-jobs.jpg", "caption": "Find jobs: your search settings."}, {"text": "**GPT/Claude prompts** works with a free chat. Click **Write the search prompt**, copy it into ChatGPT or Claude with web search switched on, paste the whole reply back and click **Generate tracker**.", "img": "10-chat-prompt.jpg", "caption": "GPT/Claude prompts: copy the prompt, paste the reply."}, {"text": "Results show the fit with your resume, what they ask for and any gaps. Tick the ones you like and click **Add to tracker**, or **Generate tracker** to save them as a new tracker file. Each result links to the real posting: check it before you apply.", "img": "11-results.jpg", "caption": "Results, ready to add to your tracker."}, {"text": "Found a job yourself? Paste it under **Add a posting you found** and Job tracker fills in the details and the fit for you."}]}, {"id": "apply", "title": "Apply", "intro": "**Applications** lists every job in your tracker, best to apply for first, with where each one stands.", "steps": [{"text": "Click a job to see what they ask for, where your resume matches and the gaps to cover. Use the filters and sort to narrow the list.", "img": "12-applications.jpg", "caption": "Applications: the list and one job's details."}, {"text": "**Draft cover letter** and **Craft resume** write versions tailored to this job, using only what's in your resume. Each one is made as a Word file and a PDF, kept with the job: **Download Word** and **Download PDF** save them to your computer, **Open PDF** shows it in a new tab and **Open folder** lists everything kept for the job. You can edit the text and save again.", "img": "13-drafts.jpg", "caption": "A tailored cover letter, saved as Word and PDF."}, {"text": "**Build the kit** does both at once, plus ready-to-paste answers to common application questions."}, {"text": "**Research the company** gives a briefing: what they do, what it's like to work there, how they interview and smart questions to ask. **Interview prep** adds practice questions with feedback on your answers.", "img": "14-research.jpg", "caption": "A company briefing."}, {"text": "After applying, click **Mark as applied today**. Keep the status, next step and follow-up date up to date: Job tracker writes them into your tracker and reminds you on Home when a follow-up is due. **Follow-ups to calendar** adds the dates to your calendar."}]}, {"id": "offers", "title": "Compare offers", "intro": "When offers arrive, **Offers** puts them side by side.", "steps": [{"text": "Start from a job in your tracker or a blank offer, then add pay, bonus, benefits and anything else that matters. The best figure in each row is highlighted, and Job tracker can help you prepare a negotiation.", "img": "16-offers.jpg", "caption": "Offers, side by side."}]}, {"id": "settings", "title": "Make it yours", "intro": "Settings has four tabs: General, Appearance, Local files and Prompts.", "steps": [{"text": "**Appearance** changes the theme (or matches your computer's light and dark), the accent colour, the text size and animations. Changes apply right away.", "img": "15-appearance.jpg", "caption": "Settings, Appearance."}, {"text": "**Prompts** has ready-made prompts for free ChatGPT and Claude: create a tracker, find jobs and add them, update your progress or check which listings are still open. Paste a chat's reply under **Got rows back from the chat?** to add the jobs to your tracker.", "img": "17-prompts.jpg", "caption": "Settings, Prompts: tracker prompts for free chats."}, {"text": "**General** also has hidden companies (their listings are left out everywhere), extra details to mention in drafts, and how many days to wait before a follow-up."}, {"text": "**Local files** opens or downloads your tracker, lists your documents and backs up everything Job tracker keeps in this browser. Download a backup now and then: clearing your browsing data also clears Job tracker."}]}, {"id": "help", "title": "If something isn't right", "intro": "", "steps": [{"text": "**\"Couldn't save into the file\"**: the tracker may be open in Excel. Close it there, then press **Save** in the bar under the header."}, {"text": "**Your changes in Excel don't show**: save the file in Excel. When the tracker is linked (Chrome and Edge), Job tracker notices within a few seconds; otherwise open it again with **Open a tracker file**."}, {"text": "**A draft or search didn't work**: check the mode badge at the top, then use **Test connection** in Settings. In Free chat mode, make sure you pasted the whole reply."}, {"text": "**Something went wrong with the tracker**: Job tracker keeps a copy before every change. Settings, Local files, **Open folder** next to Tracker folder lists them to download."}]}], "images": ["01-first-run.jpg", "02-settings-free-chat.jpg", "04-settings-local.jpg", "05-resume.jpg", "06-create-tracker.jpg", "07-home.jpg", "08-find-jobs.jpg", "10-chat-prompt.jpg", "11-results.jpg", "12-applications.jpg", "13-drafts.jpg", "14-research.jpg", "15-appearance.jpg", "16-offers.jpg", "17-prompts.jpg"]};</script>
 <script>
 (function(){
 "use strict";
-/* Job Line, static edition: the Job Line server, running inside the browser.
+/* Job tracker, static edition: the Job tracker server, running inside the browser.
 
 The page script (app.js, shared with the Flask and Django editions) talks to a server through /api/... addresses. This
 edition has no server: these files answer those addresses in the page, with the same replies the Python engine gives
@@ -2129,7 +2295,7 @@ function idb() {
   return _db;
 }
 function storeError(e) {
-  if (e && e.name === "QuotaExceededError") return new ApiError("Your browser's storage for Job Line is full. Remove old tracker files or saved documents in Settings, Local files.", 507);
+  if (e && e.name === "QuotaExceededError") return new ApiError("Your browser's storage for Job tracker is full. Remove old tracker files or saved documents in Settings, Local files.", 507);
   return new ApiError("Couldn't save in this browser's storage: " + (e && e.message || e), 500);
 }
 async function tx(mode, fn) {
@@ -2508,7 +2674,7 @@ function hashId(s) {                               // a stable id for each event
 }
 function buildIcs(events) {
   const now = new Date(), st = `${now.getUTCFullYear()}${pad(now.getUTCMonth() + 1)}${pad(now.getUTCDate())}T${pad(now.getUTCHours())}${pad(now.getUTCMinutes())}${pad(now.getUTCSeconds())}Z`;
-  const out = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Job Line//Follow-ups//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:Job Line follow-ups"];
+  const out = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Job tracker//Follow-ups//EN", "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:Job tracker follow-ups"];
   for (const e of events) {
     if (!/^\d{4}-\d{2}-\d{2}$/.test(e.date || "") || !mkDate(...e.date.split("-"))) continue;
     const day = e.date.replace(/-/g, ""), next = addDaysISO(e.date, 1).replace(/-/g, "");
@@ -2524,7 +2690,7 @@ function buildIcs(events) {
 
 /* ---------- ai.py: the prompts, the reply parsers, and talking to a local model ---------- */
 const NOTES_MARK = "=== NOTES ===";
-const CORS_HINT = "if it is running, it may be turning this page away. For Ollama, set OLLAMA_ORIGINS (see README.txt next to this page); for LM Studio, switch on CORS in its server settings.";
+const CORS_HINT = "if it is running, it may be turning this page away. For Ollama, set OLLAMA_ORIGINS (see README.md next to this page); for LM Studio, switch on CORS in its server settings.";
 
 /* Text pieces as the local model writes them (an OpenAI-compatible /chat/completions stream). */
 async function* stream(s, prompt, signal) {
@@ -2697,7 +2863,9 @@ function dedupe(sources, limit = 15) {
 const ROW_KEYS = ["company", "role", "location", "km", "workModel", "pay", "category", "fit", "requirements", "match", "gaps", "source", "notes"];
 const LINK_RULE = "the direct link to this posting, written out in full and starting with https:// "
   + "(for example https://ca.indeed.com/viewjob?jk=...). Write the web address itself as plain text: "
-  + "not a citation marker, footnote number, site name or markdown link. Every posting needs its own link; "
+  + "not a citation marker, footnote number, site name or markdown link. Open every link before you give it: it must load "
+  + "this posting itself, still open for applications, not a search page, a sign-in page or a page saying the job is closed. "
+  + "Every posting needs its own link that you opened; "
   + "leave out any posting you can't link to";
 const SOURCE_KEYS = ["source", "url", "link", "posting_url", "postingUrl", "job_url", "jobUrl", "apply_url", "applyUrl",
   "listing", "listingSource", "Listing Source", "sourceUrl", "href"];
@@ -2732,7 +2900,9 @@ function rowSpec(home, cats) {
 "match": where the candidate's resume matches, specific to their experience,
 "gaps": what the posting asks for that the resume doesn't show, stated plainly,
 "source": ${LINK_RULE},
-"notes": posting or closing date if shown, plus anything notable, in a few words.`;
+"closes": the closing date or application deadline as YYYY-MM-DD if the posting shows one, otherwise "",
+"careers": the employer's own careers or jobs page, written out in full (https://...), only if you opened it and it loads, otherwise "". Never a search engine link,
+"notes": the posting date if shown, plus anything notable, in a few words.`;
 }
 function parseJson(text, want = "array") {
   const t = String(text).replace(/```(?:json)?/g, "");
@@ -2758,7 +2928,22 @@ function cleanRow(r) {
     const url = findUrl(r[k]);
     if (url) { out.source = url; break; }
   }
+  foldExtras(out, r);
   return out;
+}
+const NOT_GIVEN = ["", "not listed", "not shown", "not stated", "none", "n/a", "na", "unknown", "-"];
+const SEARCH_HOST = /^https?:\/\/(?:[a-z0-9-]+\.)*(?:google|bing|duckduckgo|yahoo)\.[a-z.]+\//i;
+/* The tracker has no columns for a closing date or the employer's careers page, so they go into Notes as
+   "Closes 2026-10-20" and "Careers page: https://...", which the job page reads back. A search-engine link is not a
+   careers page. */
+function foldExtras(out, r) {
+  const closes = String(r.closes || r.closingDate || r.deadline || "").trim();
+  let careers = findUrl(r.careers || r.careersPage || r.careers_url || "");
+  if (SEARCH_HOST.test(careers)) careers = "";
+  const extra = [];
+  if (!NOT_GIVEN.includes(closes.toLowerCase()) && !out.notes.includes(closes)) extra.push("Closes " + closes);
+  if (careers && !out.notes.includes(careers)) extra.push("Careers page: " + careers);
+  if (extra.length) out.notes = (out.notes ? [out.notes.replace(/[; .]+$/, "")] : []).concat(extra).join("; ");
 }
 const MAX_RESULTS = 100;
 function searchCount(criteria, dflt = 10) {
@@ -2836,11 +3021,36 @@ function rowFromText(text, url = "") {
   if (!row.company || !row.role) throw new AIError("Couldn't find a company and job title in that text. Paste the full posting.");
   return row;
 }
-function researchFromText(text, web) {
-  const body = fromHeading(text || "");
-  let sources = [];
+/* ChatGPT's copy button turns its web citations into markdown references: "([Site][1])" in the text and a list of
+   '[1]: https://...?utm_source=chatgpt.com "Title"' lines at the very end of the reply. */
+const REF_DEF = /^[ \t]*\[([^\]\n]+)\]:[ \t]*<?(https?:\/\/[^\s>]+)>?(?:[ \t]+["'(](.*?)["')])?[ \t]*$/gm;
+const REF_CITE = /[ \t]*\((?:[ \t]*\[[^\]\n]+\]\[[^\]\n]+\][ \t]*,?)+\)/g;
+const REF_LINK = /\[([^\]\n]+)\]\[([^\]\n]+)\]/g;
+const CHAT_MARK = /[^]*|【[^】\n]*】/g;
+const noUtm = url => url.replace(/([?&])utm_source=(?:chatgpt\.com|openai|claude\.ai)(&|$)/, (k, a, b) => b ? a : "").replace(/[?&]+$/, "");
+/* Take chat citation markers out of a pasted reply. Returns [clean text, [{title, url}] from the reference list]. */
+function splitCitations(text) {
+  let t = String(text || "");
+  const refs = {}, sources = [];
+  for (const m of t.matchAll(REF_DEF)) {
+    const url = noUtm(m[2]);
+    refs[m[1]] = url;
+    sources.push({ title: (m[3] || "").trim() || url, url });
+  }
+  t = t.replace(REF_DEF, "").replace(REF_CITE, "")
+    .replace(REF_LINK, (m, a, b) => b in refs ? a : m)
+    .replace(CHAT_MARK, "")
+    .replace(/https?:\/\/[^\s)\]>"]+/g, noUtm)
+    .replace(/\n{3,}/g, "\n\n");
+  return [t.trim(), sources];
+}
+function researchFromText(text, web, refs = []) {
+  const [clean, found] = splitCitations(text);
+  const body = fromHeading(clean);
+  found.push(...refs);
+  let sources = dedupe(found);
   if (web) {
-    const found = [...body.matchAll(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g)].map(m => ({ title: m[1], url: m[2].replace(/[.,;]+$/, "") }));
+    for (const m of body.matchAll(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g)) found.push({ title: m[1], url: m[2].replace(/[.,;]+$/, "") });
     for (const m of body.matchAll(/https?:\/\/[^\s)\]>]+/g)) found.push({ title: m[0], url: m[0].replace(/[.,;]+$/, "") });
     sources = dedupe(found);
   }
@@ -2964,9 +3174,41 @@ function promptFor(kind, job, resumeText, extra = "", ctx = {}) {
   return null;
 }
 function prepFromText(text) {
-  const body = fromHeading(text || "");
+  const body = fromHeading(splitCitations(text)[0]);
   if (!body.includes("## ")) throw new AIError("That doesn't look like an interview guide. Ask the chat to use the sections from the prompt.");
   return { text: body };
+}
+
+/* ---------------- briefing and interview guide in one prompt (free chat mode) ---------------- */
+const BOTH_BRIEF = "=== PART 1: COMPANY BRIEFING ===";
+const BOTH_GUIDE = "=== PART 2: INTERVIEW GUIDE ===";
+const GUIDE_MARK = /^[^\w\n]*=*\s*(?:PART\s*2\s*:?\s*)?INTERVIEW GUIDE\s*=*[^\w\n]*$/im;
+const GUIDE_START = /^#+\s*Your 60-second pitch/im;
+/* The company briefing and the interview guide as one prompt, so one copy and paste fills both. */
+function bothPrompt(job, resumeText, web, extra = "") {
+  return `Do two tasks for a job seeker in one reply: a company briefing, then an interview guide.
+Start your reply with the line ${BOTH_BRIEF} and write the briefing. Then put the line ${BOTH_GUIDE} on its own line and write the guide. Nothing before the first line.
+
+${BOTH_BRIEF}
+${researchPrompt(job, web)}
+
+${BOTH_GUIDE}
+${prepPrompt(job, resumeText, extra)}`;
+}
+/* Split a pasted reply to bothPrompt into [briefing, guide]. Without the part line, the guide starts at its first heading.
+   The chat's reference list sits at the very end, under the guide, so it is read from the whole reply. */
+function bothFromText(text, web) {
+  const [t, refs] = splitCitations(text);
+  let m = GUIDE_MARK.exec(t), brief, guide;
+  if (m) { brief = t.slice(0, m.index); guide = t.slice(m.index + m[0].length); }
+  else {
+    m = GUIDE_START.exec(t);
+    if (!m) throw new AIError("Couldn't find the interview guide in that reply. Paste the whole reply, both parts.");
+    brief = t.slice(0, m.index); guide = t.slice(m.index);
+  }
+  const res = researchFromText(brief, web, refs);
+  if (!res.text.includes("## ")) throw new AIError("Couldn't find the company briefing in that reply. Paste the whole reply, both parts.");
+  return [res, prepFromText(guide)];
 }
 function salaryPrompt(job, web) {
   const how = web ? "Search the web for current pay for this kind of role (job boards, Glassdoor, Indeed, Job Bank, the employer's careers page). "
@@ -3096,7 +3338,7 @@ function parseRows(wb) {
 function looksLikeTracker(wb) { try { columnsOf(findSheet(wb)); return true; } catch (e) { return false; } }
 
 /* ---------- the tracker files kept in this browser ---------- */
-const REASON_TEXT = { only: "It's the only tracker in Job Line.", latest: "Job Line uses the tracker you opened, created or changed most recently.", pinned: "You chose this file in Settings." };
+const REASON_TEXT = { only: "It's the only tracker in Job tracker.", latest: "Job tracker uses the tracker you opened, created or changed most recently.", pinned: "You chose this file in Settings." };
 async function trackerList() { return (await kv.get("trackers")) || []; }
 async function saveTrackerList(ts) { await kv.set("trackers", ts); }
 async function chooseTracker() {
@@ -3108,7 +3350,7 @@ async function chooseTracker() {
 }
 function reasonText(reason) {
   const base = reason.split(", ").pop(), text = REASON_TEXT[base] || "";
-  return reason.startsWith("pinned missing") ? ("The file you chose isn't here any more, so Job Line picked one for you. " + text).trim() : text;
+  return reason.startsWith("pinned missing") ? ("The file you chose isn't here any more, so Job tracker picked one for you. " + text).trim() : text;
 }
 const NO_TRACKER = "No spreadsheet yet. Open your Job_Search_Tracker.xlsx (Settings, Local files), or create a new tracker.";
 async function currentTracker() {
@@ -3197,7 +3439,7 @@ async function writeThrough(file, ask, force) {
     return "error";
   }
 }
-/* Pick up changes made to the linked file outside Job Line (in Excel, or by the daily task). Called by /api/version. */
+/* Pick up changes made to the linked file outside Job tracker (in Excel, or by the daily task). Called by /api/version. */
 let _lastDiskCheck = 0;
 async function checkDisk() {
   if (Date.now() - _lastDiskCheck < 3500) return;
@@ -3392,7 +3634,7 @@ async function createTracker(name) {
 }
 /* Open a tracker file from the computer: check it, then keep it (and its link, when there is one). It becomes the tracker in use. */
 async function importTracker(name, bytes, handle) {
-  if (!/\.xlsx$/i.test(name)) throw new ApiError(/\.xlsm$/i.test(name) ? "Job Line in the browser can't keep the macros in an .xlsm file. Save it as .xlsx in Excel first." : "Choose an Excel workbook (.xlsx).");
+  if (!/\.xlsx$/i.test(name)) throw new ApiError(/\.xlsm$/i.test(name) ? "Job tracker in the browser can't keep the macros in an .xlsm file. Save it as .xlsx in Excel first." : "Choose an Excel workbook (.xlsx).");
   const wb = await loadWorkbook(bytes);
   if (!looksLikeTracker(wb)) throw new ApiError(`${name} doesn't look like a job tracker: it needs a sheet with Company and Role columns in its first row.`);
   return serial(async () => {
@@ -3595,7 +3837,7 @@ async function xSave(x) {
   return toArrayBuffer(await x.zip.generateAsync({ type: "uint8array", compression: "DEFLATE" }));
 }
 
-/* ---------- the two kinds of change Job Line makes ---------- */
+/* ---------- the two kinds of change Job tracker makes ---------- */
 async function xUpdateProgress(bytes, jid, p) {
   const x = await xUseTrackerSheet(await openXlsx(bytes)), cols = x.cols, r = xRowFor(x, jid);
   if (r === null) throw new ApiError("That listing is no longer in the tracker.");
@@ -3994,7 +4236,7 @@ async function trackersToFolder() {
   syncBar();
   return n;
 }
-/* Write the waiting files (all: every file Job Line kept) into the folder. Returns how many were written, or -1 without permission. */
+/* Write the waiting files (all: every file Job tracker kept) into the folder. Returns how many were written, or -1 without permission. */
 async function flushToFolder(ask, all) {
   if ((await folderReady(ask)) !== "granted") return -1;
   const rels = all ? (await kv.keys("file:")).map(k => k.slice(5)) : (await kv.get("docpending")) || [];
@@ -4027,75 +4269,75 @@ function delFileUrl(rel) { if (fileUrls[rel]) { URL.revokeObjectURL(fileUrls[rel
 /* ---------- How to use: this edition's own guide ----------
 The desktop guide (engine/guide.py, adapted by GUIDE_EDITS into window.JL_GUIDE) describes the desktop app. This page
 has its own tabs, wording and AI modes, so /api/guide serves the sections below instead. Same shape as guide.py:
-id, title, intro, numbered steps; **bold** only. No screenshots yet: the ones in guide/ show the desktop look. */
+id, title, intro, numbered steps; **bold** only. Screenshots: static_page/guide/st-*.jpg (made-up data only), copied into jobline-static/guide by the build. */
 const STATIC_GUIDE = [
-  { id: "start", title: "Start Job Line",
-    intro: "Job Line is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.",
+  { id: "start", title: "Start Job tracker",
+    intro: "Job tracker is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.",
     steps: [
       { text: "Open the **jobline-static** folder and double-click **index.html**. It opens in your browser. **Chrome** and **Edge** work best: they can save your files straight into a folder on your computer." },
       { text: "Bookmark the page and use the same browser each time. Your resume, job tracker file and documents are kept in that browser, so another browser starts empty." },
-      { text: "On a fresh start, **Home** shows three steps: **upload your resume**, **search for jobs** to create your job tracker file, then **see your applications**. Each step gets a tick when it's done." },
-      { text: "Under the tabs, **Resume** and **Job tracker file** show what's in use, with a green dot. Click either one to change it." },
+      { text: "On a fresh start, **Home** shows three steps: **upload your resume**, **search for jobs** to create your job tracker file, then **see your applications**. Each step gets a tick when it's done.", img: "st-01-home-fresh.jpg", caption: "A fresh start: three steps on Home." },
+      { text: "Under the tabs, **Resume** and **Job tracker file** show what's in use, with a green dot. Click either one to change it.", img: "st-11-home.jpg", caption: "Home with a resume and a job tracker file in use." },
     ] },
-  { id: "mode", title: "Choose how Job Line uses AI",
-    intro: "Job Line writes tailored resumes and cover letters, researches companies and finds jobs with an AI. This page has two ways to use one. You can switch any time without losing anything.",
+  { id: "mode", title: "Choose how Job tracker uses AI",
+    intro: "Job tracker writes tailored resumes and cover letters, researches companies and finds jobs with an AI. This page has two ways to use one. You can switch any time without losing anything.",
     steps: [
-      { text: "Open **Settings** (the last tab, on the right). On the **General** tab, find **Drafting with** and pick a mode. The badge at the top right always shows the mode in use; click it to come back here." },
+      { text: "Open **Settings** (the last tab, on the right). On the **General** tab, find **Drafting with** and pick a mode. The badge at the top right always shows the mode in use; click it to come back here.", img: "st-02-settings-free-chat.jpg", caption: "Settings, General: Drafting with, here set to Free chat." },
       { text: "**Free chat (copy and paste)** uses a free ChatGPT or Claude account in another tab. No key, no cost, and it can search the web for jobs. The next section shows how it works." },
-      { text: "**Local model** uses an AI running on your own computer (Ollama or LM Studio) through its API. Job Line talks to it directly, so drafts appear without copying anything, and nothing leaves your computer. It can't search the web. See **Local model** below to set it up." },
+      { text: "**Local model** uses an AI running on your own computer (Ollama or LM Studio) through its API. Job tracker talks to it directly, so drafts appear without copying anything, and nothing leaves your computer. It can't search the web. See **Local model** below to set it up." },
       { text: "Not sure? Start with **Free chat**. Finding jobs always uses the chat prompts on this page, whichever mode you pick for drafting." },
-      { text: "Paid API keys for Claude or ChatGPT are only in the desktop version of Job Line." },
+      { text: "Paid API keys for Claude or ChatGPT are only in the desktop version of Job tracker." },
     ] },
   { id: "freechat", title: "Free chat: copy and paste",
-    intro: "In free chat mode Job Line writes the prompt, your chat does the thinking, and Job Line turns the reply into files. It works for resumes, cover letters, company research, interview prep and finding jobs.",
+    intro: "In free chat mode Job tracker writes the prompt, your chat does the thinking, and Job tracker turns the reply into files. It works for resumes, cover letters, company research, interview prep and finding jobs.",
     steps: [
       { text: "In **Settings**, **General**, choose **Free chat (copy and paste)** and click **Save settings**." },
       { text: "When you ask for something (for example **Craft resume** on a job, or **Write the search prompt** in Find jobs), the **Ask your chat** window opens with the prompt ready." },
-      { text: "Click **Copy prompt**, then open a new chat at chatgpt.com or claude.ai (the links are in the window). Paste the prompt and send it. For finding jobs, turn on the chat's **web search**." },
-      { text: "When the chat has finished, copy its **whole reply**, paste it into **The chat's reply** and click **Use this reply**. Job Line does the rest: the resume or letter, the Word and PDF files, or the job results." },
-      { text: "Your privacy: before your resume goes into a prompt, your name, email, phone, address and links are replaced with placeholders such as [NAME] and [EMAIL]. Job Line puts them back when you paste the reply." },
+      { text: "Click **Copy prompt**, then open a new chat at chatgpt.com or claude.ai (the links are in the window). Paste the prompt and send it. For finding jobs, turn on the chat's **web search**.", img: "st-04-chat-window.jpg", caption: "The Ask your chat window: copy the prompt, paste the reply." },
+      { text: "When the chat has finished, copy its **whole reply**, paste it into **The chat's reply** and click the button under it: **Use this reply**, or for a job search **Generate job tracker file**. Job tracker does the rest: the resume or letter, the Word and PDF files, or the job results." },
+      { text: "Your privacy: before your resume goes into a prompt, your name, email, phone, address and links are replaced with placeholders such as [NAME] and [EMAIL]. Job tracker puts them back when you paste the reply." },
       { text: "**Settings**, **Prompts** has more ready-made prompts to copy: create a job tracker file, find jobs and update it, add one posting, and check which listings are still open." },
     ] },
   { id: "local", title: "Local model: an AI on your computer",
-    intro: "A local model is a free AI that runs on your own computer. Job Line sends it requests through its API (the same kind ChatGPT uses), so drafts come back by themselves and nothing is sent over the internet.",
+    intro: "A local model is a free AI that runs on your own computer. Job tracker sends it requests through its API (the same kind ChatGPT uses), so drafts come back by themselves and nothing is sent over the internet.",
     steps: [
       { text: "Install **Ollama** (ollama.com) or **LM Studio** (lmstudio.ai) and download a model. With Ollama, run **ollama pull llama3.1:8b** in a terminal. A computer with 16 GB of memory or more works best." },
-      { text: "Let this page talk to it. **Ollama**: set the environment variable **OLLAMA_ORIGINS** to an asterisk (the * character) and restart Ollama. **LM Studio**: start the server in the Developer tab and switch on **Enable CORS**. Without this the browser blocks the connection. README.txt next to this page has the details." },
-      { text: "In **Settings**, **General**, choose **Local model**. Fill in **Server address** (Ollama: http://localhost:11434/v1, LM Studio: http://localhost:1234/v1) and **Model** (the name you downloaded, for example llama3.1:8b). Leave **API key** blank unless your server asks for one." },
+      { text: "Let this page talk to it. **Ollama**: set the environment variable **OLLAMA_ORIGINS** to an asterisk (the * character) and restart Ollama. **LM Studio**: start the server in the Developer tab and switch on **Enable CORS**. Without this the browser blocks the connection. README.md next to this page has the details." },
+      { text: "In **Settings**, **General**, choose **Local model**. Fill in **Server address** (Ollama: http://localhost:11434/v1, LM Studio: http://localhost:1234/v1) and **Model** (the name you downloaded, for example llama3.1:8b). Leave **API key** blank unless your server asks for one.", img: "st-03-settings-local.jpg", caption: "Local model: the server address and model of Ollama or LM Studio." },
       { text: "Click **Test connection**. When it says it worked, click **Save settings**. The badge at the top right now says **Local model**." },
-      { text: "Now **Craft resume**, **Draft cover letter**, research and interview prep write straight into Job Line. A local model can't search the web, so for **Find jobs** keep using the chat prompts, and company research comes from what the model already knows." },
+      { text: "Now **Craft resume**, **Draft cover letter**, research and interview prep write straight into Job tracker. A local model can't search the web, so for **Find jobs** keep using the chat prompts, and company research comes from what the model already knows." },
       { text: "If a draft stops or is slow, try a smaller model, or switch back to **Free chat** for that task." },
     ] },
   { id: "resume", title: "Add your resume",
-    intro: "Everything Job Line writes for you is built from your own resume. It never invents experience you don't have.",
+    intro: "Everything Job tracker writes for you is built from your own resume. It never invents experience you don't have.",
     steps: [
       { text: "Open the **Resume** tab and click **Add resume**, or use **Upload resume** in the first step on Home. A Word file (.docx) works best; a text-based PDF, .txt or .md also works. Home then greets you by your first name." },
-      { text: "The card at the top shows the resume in use, with its words, sections and the skills Job Line recognises. Your original file is never changed." },
+      { text: "The card at the top shows the resume in use, with its words, sections and the skills Job tracker recognises. Your original file is never changed.", img: "st-10-resume.jpg", caption: "The Resume tab: the resume in use, the folder, your custom resumes and cover letters." },
       { text: "Have more than one resume? Add each one, then pick from the **Resume** dropdown. **Automatic** uses a Word file first, then the newest. You can still choose a different resume on a single job." },
       { text: "Further down, **Custom resumes** and **Cover letters** list everything you've saved for applications, newest first. **PDF** opens one, **Word** downloads it. Files are named after your resume and the job, for example Jane_Doe_Resume - Software Developer - Contoso." },
       { text: "**How it covers your listings** shows how well your resume matches the skills your listings ask for, and which skills come up that your resume doesn't mention. Add them only if you really have them." },
     ] },
   { id: "tracker", title: "Get your job tracker file",
-    intro: "Your job tracker file is an Excel file with every job you're considering and where each application stands. Job Line keeps it up to date, and you can open it in Excel any time.",
+    intro: "Your job tracker file is an Excel file with every job you're considering and where each application stands. Job tracker keeps it up to date, and you can open it in Excel any time.",
     steps: [
-      { text: "Open **Find jobs**. The card at the top says how to get one. **Search for jobs**: the results become your job tracker file. **Add job tracker file**: use one you already have, like Job_Search_Tracker.xlsx. Or start an empty one and fill it in yourself." },
+      { text: "Open **Find jobs**. The card at the top says how to get one. **Search for jobs**: the results become your job tracker file. **Add job tracker file**: use one you already have, like Job_Search_Tracker.xlsx. Or start an empty one and fill it in yourself.", img: "st-05-tracker-card.jpg", caption: "Find jobs before there is a job tracker file." },
       { text: "Once you have one, the card shows its name, how many listings it has, when it last changed and where it's saved, with **Add job tracker file** and **Download**." },
       { text: "Several job tracker files? Pick one from the dropdown on the card, or click **Job tracker file** under the tabs. **Automatic** uses the one you opened, created or changed most recently." },
-      { text: "Opening it in Excel? Close it again before you make changes in Job Line, so both don't change the file at once." },
+      { text: "Opening it in Excel? Close it again before you make changes in Job tracker, so both don't change the file at once." },
     ] },
   { id: "find", title: "Find jobs",
-    intro: "Job Line writes a search prompt from what you're looking for and your resume. Your free ChatGPT or Claude chat searches the web, and the results come back in your job tracker file's columns.",
+    intro: "Job tracker writes a search prompt from what you're looking for and your resume. Your free ChatGPT or Claude chat searches the web, and the results come back in your job tracker file's columns.",
     steps: [
-      { text: "Fill in **What you're looking for**. Leave **Roles or keywords** empty for roles that fit your resume. Leave **Near** empty to search around the city on your resume; type a city to search there instead. Then choose how far, work model, how recent and how many results." },
+      { text: "Fill in **What you're looking for**. Leave **Roles or keywords** empty for roles that fit your resume. Leave **Near** empty to search around the city on your resume; type a city to search there instead. Then choose how far, work model, how recent and how many results.", img: "st-06-find-form.jpg", caption: "What you're looking for. Empty boxes use your resume." },
       { text: "Click **Write the search prompt**, copy it into a chat with **web search** on, and paste the whole reply back (see **Free chat** above)." },
-      { text: "Results show the fit with your resume, what they ask for and any gaps. Tick the ones you like and click **Create my job tracker file with these** (or **Add to job tracker file** once you have one). **Generate job tracker file** saves a new file with them instead." },
-      { text: "A green note on the card then says your listings are ready: click **Go to Applications** to see them." },
-      { text: "**Search the job boards** opens Indeed, LinkedIn and others with your search filled in. Found a job yourself? Paste it under **Add a posting you found** and Job Line fills in the columns for you." },
+      { text: "Results show the fit with your resume, what they ask for and any gaps. Tick the ones you like and click **Create my job tracker file with these** (or **Add to job tracker file** once you have one). **Generate job tracker file** saves a new file with them instead.", img: "st-08-results.jpg", caption: "Results, with the fit, what they ask for and the gaps." },
+      { text: "A green note on the card then says your listings are ready: click **Go to Applications** to see them.", img: "st-07-ready.jpg", caption: "The job tracker file is ready: go to Applications." },
+      { text: "**Search the job boards** opens Indeed, LinkedIn and others with your search filled in. Found a job yourself? Paste it under **Add a posting you found** and Job tracker fills in the columns for you." },
     ] },
   { id: "apply", title: "Apply",
     intro: "**Applications** lists every job in your job tracker file, best to apply for first, with where each one stands.",
     steps: [
-      { text: "Click a job to see what they ask for, where your resume matches and the gaps to cover." },
+      { text: "Click a job to see what they ask for, where your resume matches and the gaps to cover.", img: "st-09-applications.jpg", caption: "Applications: every job, and the one you opened." },
       { text: "**Craft resume** and **Draft cover letter** write versions tailored to this job, using only what's on your resume. Read them, edit anything, then **Save Word and PDF**. They appear on the Resume tab under Custom resumes and Cover letters." },
       { text: "**Research the company** gives a briefing on what they do, what it's like to work there, the interview process and questions to ask. Interview prep and a pay estimate are there too." },
       { text: "After applying, click **Mark as applied today**. Keep the status, next step and follow-up date up to date, and Home reminds you when a follow-up is due." },
@@ -4103,15 +4345,15 @@ const STATIC_GUIDE = [
   { id: "files", title: "Where your files are kept",
     intro: "Everything is kept in this browser. Chrome and Edge can also save your files into a folder on your computer.",
     steps: [
-      { text: "On the **Resume** tab, click **Choose folder** and pick a folder, for example Documents\\Job Line. Job Line makes three folders in it: **Job tracker files**, **Custom resumes** and **Cover letters**, and copies what you already have." },
+      { text: "On the **Resume** tab, click **Choose folder** and pick a folder, for example Documents\\Job tracker. Job tracker makes three folders in it: **Job tracker files**, **Custom resumes** and **Cover letters**, and copies what you already have." },
       { text: "From then on your job tracker file is saved there as you work, and every resume and cover letter you save goes there as a Word file and a PDF. The browser asks for permission again on a later visit." },
       { text: "Without a folder, a bar under the tabs says when your job tracker file has changes that aren't on your computer yet, with **Save as a file** and **Download**. **Hide** folds it to one line; **Show** opens it again." },
-      { text: "**Settings**, **Local files** lists your job tracker files, documents, custom resumes and cover letters. **Back up everything** downloads one file you can restore later; do it now and then, because clearing your browser's data also clears Job Line." },
+      { text: "**Settings**, **Local files** lists your job tracker files, documents, custom resumes and cover letters. **Back up everything** downloads one file you can restore later; do it now and then, because clearing your browser's data also clears Job tracker.", img: "st-13-local-files.jpg", caption: "Settings, Local files." },
     ] },
   { id: "settings", title: "Make it yours",
     intro: "Settings is the last tab, on the right. It has four parts: General, Appearance, Local files and Prompts.",
     steps: [
-      { text: "The sun and moon button at the top right switches between light and dark. **Appearance** also has the accent colour, text size and **reduce motion**, which stills the moving background." },
+      { text: "The sun and moon button at the top right switches between light and dark. **Appearance** also has the accent colour, text size and **reduce motion**, which stills the moving background.", img: "st-12-appearance.jpg", caption: "Settings, Appearance: the themes." },
       { text: "**General** has the AI mode, your resume, hidden companies (their listings are left out everywhere), extra details about you for drafts, and how many days to wait before a follow-up." },
       { text: "**Prompts** has ready-made prompts for free ChatGPT and Claude. **Local files** has your files and backups." },
     ] },
@@ -4121,7 +4363,7 @@ const STATIC_GUIDE = [
       { text: "**Couldn't save into the file**: the job tracker file may be open in Excel. Close it there, then click **Save** in the bar under the tabs." },
       { text: "**The local model doesn't connect**: check it's running, the address and model name in Settings, and that CORS is on (OLLAMA_ORIGINS for Ollama, Enable CORS in LM Studio). Then click **Test connection** again." },
       { text: "**A pasted reply wasn't understood**: copy the chat's whole reply, not just part of it, and paste it again. For job searches, make sure web search was on." },
-      { text: "**Something went wrong with the job tracker file**: Job Line keeps a copy before every change. Settings, Local files, **Job tracker file folder** lists the backups to download." },
+      { text: "**Something went wrong with the job tracker file**: Job tracker keeps a copy before every change. Settings, Local files, **Job tracker file folder** lists the backups to download." },
       { text: "**Everything is gone**: you may be in another browser, a private window, or your browser's data was cleared. Use the same browser, and restore a backup from Settings, Local files." },
     ] },
 ];
@@ -4130,7 +4372,7 @@ const STATIC_GUIDE = [
 const CLOSED_STATUSES = new Set(["Rejected", "Withdrawn", "Accepted", "No Response"]);
 const INTERVIEW_STATUSES = new Set(["Phone Screen", "Interview Scheduled", "Interviewing"]);
 const WRITING_KINDS = ["resume", "letter", "kit", ...Object.keys(MESSAGE_KINDS)];
-const NEEDS_DESKTOP = "needs the desktop version of Job Line (it uses an API key or reads web pages, which a page in the browser can't do).";
+const NEEDS_DESKTOP = "needs the desktop version of Job tracker (it uses an API key or reads web pages, which a page in the browser can't do).";
 
 async function jobById(jid) {
   const data = await readTracker();
@@ -4245,7 +4487,7 @@ async function apiSave(req) {
   const b = req.body, kind = b.kind || "letter";
   if (!["resume", "letter", "answers"].includes(kind)) throw new ApiError("Unknown kind of document.");
   if (!String(b.text || "").trim()) throw new ApiError("There's nothing to save yet.");
-  await folderReady(true);   // first, while the Save press still counts: the browser may ask to let Job Line use the documents folder
+  await folderReady(true);   // first, while the Save press still counts: the browser may ask to let Job tracker use the documents folder
   const job = await jobById(b.id || ""), text = String(b.text || "");
   const folder = jobFolder(job), company = safeName(job.company, 40);
   const have = new Set((await filesIn(folder)).map(f => f.name.toLowerCase()));
@@ -4390,7 +4632,7 @@ async function apiOffers(req) {
 /* ---------- trackers ---------- */
 async function apiTrackerCreate(req) { return { file: await createTracker(String(req.body.name || "")) }; }
 async function apiTrackerImport(req) {
-  const text = String(req.body.text || "").trim();
+  const text = unescapeChat(String(req.body.text || "").trim());
   if (!text) throw new ApiError("Paste the chat's reply first.");
   let rows;
   try { rows = rowsFromText(text, 100); }
@@ -4455,7 +4697,7 @@ const COLUMN_NOTES = {
 };
 function trackerSpec(cats) {
   const cols = HEADER_NAMES.map((h, i) => `  ${String.fromCharCode(65 + i)}  ${h}` + (COLUMN_NOTES[h] ? `  (${COLUMN_NOTES[h]})` : "")).join("\n");
-  return `THE TRACKER FORMAT (follow it exactly, so my Job Line app can read the file)
+  return `THE TRACKER FORMAT (follow it exactly, so my Job tracker app can read the file)
 - One workbook with a sheet named "Job Tracker" (the "Summary" sheet comes first, with counts of listings, applied, each status, interview rate and offers).
 - Row 1 holds these ${HEADER_NAMES.length} column headers, in this order, spelled exactly like this:
 ${cols}
@@ -4476,8 +4718,8 @@ function criteriaText(c) {
     `- Other wishes: ${c.extra || "none"}`].join("\n");
 }
 const FALLBACK = "If you can't create or return an Excel file in this chat (some free versions can't), say so in one line, "
-  + "then give me the new rows as a JSON array instead (no code fences, nothing else in that part), so I can paste it into my Job Line app. "
-  + "Each object has exactly these keys: company, role, location, km, workModel, pay, category, fit, requirements, match, gaps, source, notes.";
+  + "then give me the new rows as a JSON array instead (no code fences, nothing else in that part), so I can paste it into my Job tracker app. "
+  + "Each object has exactly these keys: company, role, location, km, workModel, pay, category, fit, requirements, match, gaps, source, closes, careers, notes.";
 const DEFAULT_CRITERIA = { roles: "software developer", location: "Kitchener, ON", km: "50", workModel: "Any", days: "14", minPay: "", count: "10", extra: "" };
 function promptLibrary(home, criteria, cats, tracked, blocklist, resumeText) {
   cats = cats && cats.length ? cats : DEFAULT_CATS;
@@ -4487,9 +4729,9 @@ function promptLibrary(home, criteria, cats, tracked, blocklist, resumeText) {
   const resumeHead = resume.startsWith("NOTE:") ? "MY RESUME (personal details are replaced with placeholders on purpose)" : "MY RESUME";
   const trackedTxt = tracked.slice(0, 80).map(([c, r]) => `- ${c}: ${r}`).join("\n") || "- none yet";
   const spec2 = rowSpec(home, cats);
-  const attach = "Attach your tracker file (Job_Search_Tracker.xlsx) to the chat: click the paperclip or the + button. To get the file Job Line is using, press Download tracker in Settings, Local files.";
-  const save = "Download the file the chat gives you, then open it in Job Line: Settings, Local files, Open a tracker file. Job Line switches to it.";
-  const keep = "Keep a copy of your old tracker first. Job Line keeps backups when it makes changes itself, but a file a chat hands back is a new file.";
+  const attach = "Attach your tracker file (Job_Search_Tracker.xlsx) to the chat: click the paperclip or the + button. To get the file Job tracker is using, press Download tracker in Settings, Local files.";
+  const save = "Download the file the chat gives you, then open it in Job tracker: Settings, Local files, Open a tracker file. Job tracker switches to it.";
+  const keep = "Keep a copy of your old tracker first. Job tracker keeps backups when it makes changes itself, but a file a chat hands back is a new file.";
   const create = `You are helping me set up a job-search tracker. Create a brand-new, empty Excel workbook (.xlsx) for me to download.
 
 ${spec}
@@ -4509,7 +4751,7 @@ RULES
 - Skip any role already in my tracker (same company and role). Add up to ${n} new rows.
 - Put the new rows in the first empty rows under the existing data. In each new row put today's date (${today}) in A (Date Added) and fill B to M. For P copy the formula from the row above and change the row number. (An older tracker may have # in column A instead: then copy its formula too.) Set Applied? to No and Status to Not Applied.
 - Compare each posting with my resume (pasted below) to fill in Fit / Priority, How Your Resume Matches and Gaps to Address. Be specific and honest about gaps.
-- In Notes write the posting date if shown, plus "Found by an AI search on ${today}".
+- In Notes write the posting date if shown, the closing date as "Closes YYYY-MM-DD" if the posting shows one, the employer's own careers page as "Careers page: https://..." if you opened it and it loads, plus "Found by an AI search on ${today}".
 - Do NOT change, reorder or delete any existing row, and do not change columns N to U of existing rows.
 - Keep every format, dropdown and formula in the file exactly as it is.
 
@@ -4580,14 +4822,14 @@ If you can't return a file, just give me that list.
 ${spec}`;
   return [
     { id: "create", title: "Create a new tracker", file: true,
-      when: "You don't have a tracker yet and want an Excel file in the exact layout Job Line reads.",
-      before: ["Easiest: Job Line can create it for you (Settings, Local files, Create a new tracker). Use this prompt only if you'd rather have the chat build it.",
+      when: "You don't have a tracker yet and want an Excel file in the exact layout Job tracker reads.",
+      before: ["Easiest: Job tracker can create it for you (Settings, Local files, Create a new tracker). Use this prompt only if you'd rather have the chat build it.",
         "Open a new chat in ChatGPT or Claude and paste the prompt.", save], prompt: create },
     { id: "find_update", title: "Find jobs and add them to my tracker (Excel file)", file: true,
       when: "You want the chat to search the web and hand you back your tracker with new rows added.",
       before: [attach, "Turn on the chat's web search if it has a switch for it.", "Paste the prompt and send it.", keep, save], prompt: findUpdate },
     { id: "find_rows", title: "Find jobs and send them back as rows (no file)", file: false,
-      when: "Your free chat can't edit Excel files, or you'd rather not attach your tracker. You paste the chat's reply into Job Line and it adds the rows for you.",
+      when: "Your free chat can't edit Excel files, or you'd rather not attach your tracker. You paste the chat's reply into Job tracker and it adds the rows for you.",
       before: ["Turn on the chat's web search if it has a switch for it.", "Paste the prompt and send it.",
         "Copy the whole reply, open the box below called Got rows back from the chat?, paste it there and press Add to my tracker."], prompt: findRows },
     { id: "add_posting", title: "Add one job posting to my tracker", file: true,
@@ -4650,7 +4892,7 @@ async function apiResumeUpload(req) {
 }
 async function apiResumeSelect(req) {
   const file = String(req.body.file || ""), jid = req.body.id;
-  if (file && !(await resumeList()).some(r => r.file === file)) throw new ApiError("That resume isn't in Job Line any more.");
+  if (file && !(await resumeList()).some(r => r.file === file)) throw new ApiError("That resume isn't in Job tracker any more.");
   const s = clone(await settings());
   if (jid) {
     await jobById(jid);
@@ -4669,6 +4911,10 @@ async function apiPrompt(req) {
   if (kind === "prep") {
     const [text, restore] = await promptResume(b.id, false);
     return out({ prompt: prepPrompt(await jobById(b.id || ""), text, extra) }, restore);
+  }
+  if (kind === "both") {                             // the briefing and the interview guide in one prompt
+    const job = await jobById(b.id || ""), [text, restore] = await promptResume(b.id, false);
+    return out({ prompt: bothPrompt(job, text, true, extra), promptNoWeb: bothPrompt(job, text, false, extra) }, restore);
   }
   if (WRITING_KINDS.includes(kind)) { const [prompt, restore] = await writingPrompt(b, true); return out({ prompt }, restore); }
   if (kind === "research") { const job = await jobById(b.id || ""); return { prompt: researchPrompt(job, true), promptNoWeb: researchPrompt(job, false) }; }
@@ -4695,12 +4941,24 @@ async function apiPrompt(req) {
   }
   throw new ApiError("Unknown kind of prompt.");
 }
+/* A reply copied from a chat that showed it as formatted text can come with markdown escapes: a backslash at the end
+   of every line and \[ \] \_ \+ \* \# in the text. JSON never needs those, so take them out before reading it (the
+   parsers in 03-ai.js stay as they are in ai.py). JSON's own escapes (\" \\ \n \t \u) are left alone. */
+function unescapeChat(text) {
+  const t = String(text || "");
+  if (!/\\[\[\]{}_*+#]|\\\r?\n/.test(t)) return t;
+  return t.replace(/\\\r?\n/g, "\n").replace(/\\([\[\]{}()_*+#\-.!|~`>])/g, "$1").trim();
+}
 async function apiImport(req) {
-  const b = req.body, kind = b.kind, text = String(b.text || "").trim();
+  const b = req.body, kind = b.kind, text = unescapeChat(String(b.text || "").trim());
   if (!text) throw new ApiError("Paste the chat's reply first.");
   try {
     if (kind === "research") return await storeResearch(b.id || "", researchFromText(text, !!b.web));
     if (kind === "prep") return await storePrep(b.id || "", prepFromText(text).text);
+    if (kind === "both") {
+      const [res, prep] = bothFromText(text, !!b.web);
+      return Object.assign(await storeResearch(b.id || "", res), await storePrep(b.id || "", prep.text));
+    }
     if (kind === "salary") { await jobById(b.id || ""); return await storeSalary(b.id, salaryFromText(text, !!b.web)); }
     if (kind === "kit") return { kit: splitKit(text) };
     if (kind === "search") { const [rows, hidden] = await filterBlocked(rowsFromText(text, searchCount(b.criteria))); return { rows: await enrichRows(rows), hidden }; }
@@ -4717,7 +4975,7 @@ async function apiSettings(req) {
   if ("blocklist" in b) s.blocklist = cleanBlocklist(b.blocklist);
   if ("resume_file" in b) {
     const name = String(b.resume_file || "").trim();
-    if (name && !(await resumeList()).some(r => r.file === name)) throw new ApiError("That resume isn't in Job Line any more.");
+    if (name && !(await resumeList()).some(r => r.file === name)) throw new ApiError("That resume isn't in Job tracker any more.");
     s.resume_file = name;
   }
   if ("tracker_file" in b) {
@@ -4784,7 +5042,7 @@ async function handle(url, init) {
     if (e && e.name === "AbortError") throw e;
     if (e instanceof ApiError) return jsonRes({ error: e.message }, e.code);
     if (e instanceof AIError) return jsonRes({ error: e.message }, 502);
-    console.error("Job Line:", e);
+    console.error("Job tracker:", e);
     return jsonRes({ error: "Something went wrong: " + (e && e.message || e) }, 500);
   }
 }
@@ -4795,7 +5053,7 @@ window.fetch = function (input, init) {
 };
 
 /* ---------- what the desktop app does with the computer's own programs, done in the page instead ----------
-"Open folder" shows the files Job Line kept for that job, "Open PDF" opens it in a new tab, "Open tracker" downloads it.
+"Open folder" shows the files Job tracker kept for that job, "Open PDF" opens it in a new tab, "Open tracker" downloads it.
 A bar under the header says when the tracker has changes that aren't in the Excel file on the computer yet. */
 const $ = id => document.getElementById(id);
 const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -4849,20 +5107,20 @@ async function showFiles(folder, title) {
     body.querySelectorAll("[data-fopen]").forEach(b => b.onclick = async () => { const f = await kv.get("file:" + b.dataset.fopen); if (f) openBlob(f.blob, f.name); });
     body.querySelectorAll("[data-fget]").forEach(b => b.onclick = async () => { const f = await kv.get("file:" + b.dataset.fget); if (f) downloadBlob(f.blob, f.name); });
     body.querySelectorAll("[data-fdel]").forEach(b => b.onclick = async () => {
-      if (!confirm("Remove this file from Job Line? It can't be brought back unless you downloaded it.")) return;
+      if (!confirm("Remove this file from Job tracker? It can't be brought back unless you downloaded it.")) return;
       await kv.del("file:" + b.dataset.fdel); delFileUrl(b.dataset.fdel); showFiles(folder, title);
     });
-    if ($("slZip")) $("slZip").onclick = () => zipFiles(files, (folder ? safeName(folder) : "Job Line documents") + ".zip").catch(e => note(e.message));
+    if ($("slZip")) $("slZip").onclick = () => zipFiles(files, (folder ? safeName(folder) : "Job tracker documents") + ".zip").catch(e => note(e.message));
   });
 }
 async function showResumes() {
   const rs = await resumeList(), s = await settings(), cur = findResume(rs, s.resume_file);
   dialog("Your resumes", rs.length
-    ? `<p class="note" style="margin:0 0 10px">Job Line keeps the text of each resume you upload, in this browser. Your files on the computer are never changed.</p><div class="filelist">`
+    ? `<p class="note" style="margin:0 0 10px">Job tracker keeps the text of each resume you upload, in this browser. Your files on the computer are never changed.</p><div class="filelist">`
       + listResumes(rs).map(r => `<div class="frow"><div><b>${esc(r.file)}</b><span class="note">${cur && cur.file === r.file ? "In use. " : ""}${r.kb} KB</span></div><div class="row2"><button class="btn small ghost" type="button" data-rdel="${esc(r.file)}">Remove</button></div></div>`).join("") + "</div>"
     : `<p class="note" style="margin:0">No resume yet. Upload one in Settings, General.</p>`,
   body => body.querySelectorAll("[data-rdel]").forEach(b => b.onclick = async () => {
-    if (!confirm(`Remove ${b.dataset.rdel} from Job Line?`)) return;
+    if (!confirm(`Remove ${b.dataset.rdel} from Job tracker?`)) return;
     await kv.set("resumes", (await resumeList()).filter(r => r.file !== b.dataset.rdel));
     const st = clone(await settings());
     if (st.resume_file === b.dataset.rdel) st.resume_file = "";
@@ -4876,8 +5134,8 @@ async function showTrackers() {
   const rows = ts.slice().sort((a, b) => b.touched - a.touched).map(t => `<div class="frow"><div><b>${esc(t.file)}</b><span class="note">${cur && cur.file === t.file ? "In use. " : ""}${t.linked ? "Linked to the file on your computer. " : ""}Changed ${esc(when(t.mtime))}.</span></div>
     <div class="row2"><button class="btn small" type="button" data-tget="${esc(t.file)}">Download</button><button class="btn small ghost" type="button" data-tdel="${esc(t.file)}">Remove</button></div></div>`).join("");
   dialog("Your tracker files", ts.length
-    ? `<p class="note" style="margin:0 0 10px">Job Line uses the tracker you opened, created or changed most recently, unless you pick one in Settings, Local files.</p><div class="filelist">${rows}</div>`
-      + (backups.length ? `<h3 class="slgroup">Backups of ${esc(cur.file)}</h3><p class="note" style="margin:0 0 8px">Job Line keeps a copy before every change it makes (the last ${KEEP_BACKUPS}).</p><div class="filelist">`
+    ? `<p class="note" style="margin:0 0 10px">Job tracker uses the tracker you opened, created or changed most recently, unless you pick one in Settings, Local files.</p><div class="filelist">${rows}</div>`
+      + (backups.length ? `<h3 class="slgroup">Backups of ${esc(cur.file)}</h3><p class="note" style="margin:0 0 8px">Job tracker keeps a copy before every change it makes (the last ${KEEP_BACKUPS}).</p><div class="filelist">`
         + backups.map(k => `<div class="frow"><div><b>${esc(k.split(":").pop().replace("_", " at ").replace(/-(\d\d)-(\d\d)$/, ":$1:$2"))}</b></div><div class="row2"><button class="btn small" type="button" data-bget="${esc(k)}">Download</button></div></div>`).join("") + "</div>" : "")
     : `<p class="note" style="margin:0">No tracker yet. Open your Job_Search_Tracker.xlsx, or create a new one, in Settings, Local files.</p>`,
   body => {
@@ -4888,7 +5146,7 @@ async function showTrackers() {
     });
     body.querySelectorAll("[data-tdel]").forEach(b => b.onclick = async () => {
       const f = b.dataset.tdel, t = (await trackerList()).find(x => x.file === f);
-      if (!confirm(`Remove ${f} from Job Line?${t && t.dirty ? " It has changes you haven't downloaded or saved to your computer." : ""} The file on your computer isn't touched.`)) return;
+      if (!confirm(`Remove ${f} from Job tracker?${t && t.dirty ? " It has changes you haven't downloaded or saved to your computer." : ""} The file on your computer isn't touched.`)) return;
       await saveTrackerList((await trackerList()).filter(x => x.file !== f));
       for (const k of [...await kv.keys(`backup:${f}:`), "tbytes:" + f, "thandle:" + f]) await kv.del(k);
       const st = clone(await settings());
@@ -4960,14 +5218,14 @@ let barToggle = null;
 async function syncBar() {
   const bar = $("slBar"); if (!bar) return;
   let html = "", kind = "", short = "";
-  if (memoryOnly) { html = "This browser isn't letting Job Line keep anything (a private window, perhaps), so your work is lost when you close the page. Download what you make as you go."; kind = "memory"; short = "Job Line can't keep your work in this browser."; }
+  if (memoryOnly) { html = "This browser isn't letting Job tracker keep anything (a private window, perhaps), so your work is lost when you close the page. Download what you make as you go."; kind = "memory"; short = "Job tracker can't keep your work in this browser."; }
   const { t } = await chooseTracker().catch(() => ({ t: null }));
   if (t && t.linked && t.conflict)
-    html = `<b>${esc(t.file)} was changed on your computer too</b>, after Job Line's last save. Which version do you want?`
-      + `<button class="btn small" type="button" data-sl="disk">Use the file from my computer</button><button class="btn small" type="button" data-sl="mine">Keep Job Line's version</button>`;
+    html = `<b>${esc(t.file)} was changed on your computer too</b>, after Job tracker's last save. Which version do you want?`
+      + `<button class="btn small" type="button" data-sl="disk">Use the file from my computer</button><button class="btn small" type="button" data-sl="mine">Keep Job tracker's version</button>`;
   else if (t && t.linked && t.dirty) {
     kind = "linked:" + t.file; short = `Changes to ${esc(t.file)} aren’t saved on your computer yet.`;
-    html = (t.syncError ? `Couldn't save into ${esc(t.file)}: ${esc(t.syncError)}` : `Your latest changes are in Job Line but not yet in ${esc(t.file)} on your computer.`)
+    html = (t.syncError ? `Couldn't save into ${esc(t.file)}: ${esc(t.syncError)}` : `Your latest changes are in Job tracker but not yet in ${esc(t.file)} on your computer.`)
       + `<button class="btn small primary" type="button" data-sl="save">Save to ${esc(t.file)}</button><button class="btn small" type="button" data-sl="get">Download a copy</button>`;
   } else if (t && t.dirty) {
     kind = "dirty:" + t.file; short = `Changes to ${esc(t.file)} aren’t saved on your computer yet.`;
@@ -4994,9 +5252,9 @@ async function syncBar() {
       const a = b.dataset.sl;
       if (a === "get") await downloadTracker(t.file);
       if (a === "saveas") await saveAsFile(t.file);
-      if (a === "save") { const r = await writeThrough(t.file, true); note(r === "written" ? `Saved into ${t.file}.` : r === "needs-permission" ? "Job Line needs your permission to save into the file. Try again and choose Allow." : r === "conflict" ? `${t.file} changed on your computer too.` : "Couldn't save into the file."); }
-      if (a === "mine") { const r = await writeThrough(t.file, true, true); note(r === "written" ? `Saved Job Line's version into ${t.file}.` : "Couldn't save into the file."); }
-      if (a === "disk") { await reloadFromDisk(t.file); note(`Using ${t.file} from your computer. Job Line's version is kept as a backup.`); refreshPage(); }
+      if (a === "save") { const r = await writeThrough(t.file, true); note(r === "written" ? `Saved into ${t.file}.` : r === "needs-permission" ? "Job tracker needs your permission to save into the file. Try again and choose Allow." : r === "conflict" ? `${t.file} changed on your computer too.` : "Couldn't save into the file."); }
+      if (a === "mine") { const r = await writeThrough(t.file, true, true); note(r === "written" ? `Saved Job tracker's version into ${t.file}.` : "Couldn't save into the file."); }
+      if (a === "disk") { await reloadFromDisk(t.file); note(`Using ${t.file} from your computer. Job tracker's version is kept as a backup.`); refreshPage(); }
     } catch (e) { note(e.message || "That didn't work."); }
     syncBar();
   });
@@ -5027,20 +5285,20 @@ async function backupAll() {
     items.push([k, await encodeValue(v)]);
   }
   for (const it of items) if (it[0] === "trackers") it[1] = it[1].map(t => Object.assign({}, t, { linked: false, diskMtime: 0 }));
-  downloadBlob(new Blob([JSON.stringify({ app: "Job Line static edition", version: 1, at: new Date().toISOString(), items })], { type: "application/json" }), `Job_Line_backup_${stamp()}.json`);
-  note("Downloaded a backup of everything in Job Line.");
+  downloadBlob(new Blob([JSON.stringify({ app: "Job tracker static edition", version: 1, at: new Date().toISOString(), items })], { type: "application/json" }), `Job_Line_backup_${stamp()}.json`);
+  note("Downloaded a backup of everything in Job tracker.");
 }
 async function restoreAll(f) {
   let data;
-  try { data = JSON.parse(await f.text()); } catch (e) { note("That file isn't a Job Line backup."); return; }
-  if (!data || data.app !== "Job Line static edition" || !Array.isArray(data.items)) { note("That file isn't a Job Line backup."); return; }
-  if (!confirm(`Replace everything in Job Line with the backup from ${String(data.at || "").slice(0, 10)}? What's in Job Line now is lost unless you back it up first.`)) return;
+  try { data = JSON.parse(await f.text()); } catch (e) { note("That file isn't a Job tracker backup."); return; }
+  if (!data || data.app !== "Job tracker static edition" || !Array.isArray(data.items)) { note("That file isn't a Job tracker backup."); return; }
+  if (!confirm(`Replace everything in Job tracker with the backup from ${String(data.at || "").slice(0, 10)}? What's in Job tracker now is lost unless you back it up first.`)) return;
   await kv.clear();
   for (const [k, v] of data.items) await kv.set(k, decodeValue(v));
   location.reload();
 }
 async function eraseAll() {
-  if (!confirm("Erase everything Job Line keeps in this browser: trackers, resumes, documents, research and settings? Files on your computer aren't touched. This can't be undone.")) return;
+  if (!confirm("Erase everything Job tracker keeps in this browser: trackers, resumes, documents, research and settings? Files on your computer aren't touched. This can't be undone.")) return;
   await kv.clear();
   location.reload();
 }
@@ -5058,12 +5316,12 @@ function setupPage() {
   if (banner) banner.insertAdjacentHTML("afterend", `<div id="slBar" class="banner slbar hidden" role="status"></div>`);
   const files = document.querySelector('.spane[data-pane="files"]');
   const intro = files && files.querySelector("fieldset > p.note");
-  if (intro) intro.textContent = "Your tracker, documents and resumes. Open tracker downloads the tracker; Open folder lists what Job Line kept, ready to download.";
+  if (intro) intro.textContent = "Your tracker, documents and resumes. Open tracker downloads the tracker; Open folder lists what Job tracker kept, ready to download.";
   if (files) files.insertAdjacentHTML("beforeend", `<fieldset id="slFiles"><legend>Kept in this browser</legend>
-    <p class="note" style="margin:0">Job Line keeps your tracker, resumes, documents and settings in this browser, on this computer. Nothing is sent anywhere except the prompts you paste into a chat and what you send to your own local model.</p>
+    <p class="note" style="margin:0">Job tracker keeps your tracker, resumes, documents and settings in this browser, on this computer. Nothing is sent anywhere except the prompts you paste into a chat and what you send to your own local model.</p>
     <div class="row2"><button class="btn small primary" type="button" data-act="sl-open-tracker">Open a tracker file</button><button class="btn small" type="button" id="slDlTrk">Download tracker</button><button class="btn small" type="button" id="slDocs">Your documents</button></div>
     <div class="row2"><button class="btn small" type="button" id="slResumes">Open custom resumes</button><button class="btn small" type="button" id="slLetters">Open cover letters</button></div>
-    <p class="note" style="margin:0">${canLink() ? "This browser can link Job Line to your tracker file, so every change is saved straight into it." : "This browser can't save straight into a file on your computer: download the tracker after making changes. (Chrome and Edge can.)"}</p>
+    <p class="note" style="margin:0">${canLink() ? "This browser can link Job tracker to your tracker file, so every change is saved straight into it." : "This browser can't save straight into a file on your computer: download the tracker after making changes. (Chrome and Edge can.)"}</p>
     <div class="row2"><button class="btn small" type="button" id="slBackup">Back up everything</button><button class="btn small" type="button" id="slRestore">Restore a backup</button><button class="btn small danger" type="button" id="slErase">Erase everything</button></div>
     <p class="note" style="margin:0">A browser can clear its storage (for example when you clear browsing data), so download a backup now and then.</p></fieldset>`);
   if ($("slDlTrk")) {
@@ -5076,7 +5334,7 @@ function setupPage() {
     $("slErase").onclick = () => eraseAll().catch(e => note(e.message));
   }
   const local = document.querySelector('.pv[data-p="local"]');
-  if (local) local.insertAdjacentHTML("beforeend", `<p class="note">Your model must let this page talk to it. Ollama: set OLLAMA_ORIGINS to * and restart Ollama. LM Studio: switch on Enable CORS in its server settings. README.txt next to this page has the steps.</p>`);
+  if (local) local.insertAdjacentHTML("beforeend", `<p class="note">Your model must let this page talk to it. Ollama: set OLLAMA_ORIGINS to * and restart Ollama. LM Studio: switch on Enable CORS in its server settings. README.md next to this page has the steps.</p>`);
   // "Open a tracker file" next to every "Create a new tracker" button the page draws
   const addOpen = root => root.querySelectorAll('[data-act="create-tracker"]').forEach(b => {
     if (b.nextElementSibling && b.nextElementSibling.dataset.act === "sl-open-tracker") return;
@@ -5089,7 +5347,7 @@ function setupPage() {
     const a = e.target.closest && e.target.closest('a[href^="/api/"]');
     if (a) {
       e.preventDefault();
-      handle(a.getAttribute("href"), {}).then(async r => { if (r.headers.get("content-type") !== "application/json") downloadBlob(await r.blob(), a.getAttribute("download") || "Job Line file"); }).catch(err => note(err.message));
+      handle(a.getAttribute("href"), {}).then(async r => { if (r.headers.get("content-type") !== "application/json") downloadBlob(await r.blob(), a.getAttribute("download") || "Job tracker file"); }).catch(err => note(err.message));
     }
   }, true);
   setupLook();
@@ -5154,7 +5412,9 @@ function setupLook() {
   const guideBtn = $("guideBtn");
   if (guideBtn && !guideBtn.dataset.renamed) { guideBtn.dataset.renamed = "1"; guideBtn.textContent = "How to use"; }
   const bar = document.querySelector(".topbar");
-  if (bar && window.ResizeObserver) new ResizeObserver(() => document.documentElement.style.setProperty("--topbar-h", bar.offsetHeight + "px")).observe(bar);
+  const barH = () => document.documentElement.style.setProperty("--topbar-h", bar.offsetHeight + "px");
+  if (bar) barH();
+  if (bar && window.ResizeObserver) new ResizeObserver(barH).observe(bar);
   const guide = $("guide");
   if (guide) new MutationObserver(() => buildGuidePanel(guide)).observe(guide, { childList: true });
   // The banner under the header: "no resume yet" and "no job tracker file yet" aren't shown there, the Home steps and the
@@ -5267,11 +5527,11 @@ function buildResumeTop(root) {
 /* ---------- the job tracker file: what this edition calls the tracker ----------
 The shared page says "tracker"; here every piece of text is swapped as it's drawn ("Your tracker" to "Your job tracker
 file", "No spreadsheet yet." to "No job tracker file yet."). File names (Job_Search_Tracker...), typed text, prompts and
-code aren't touched. */
+code aren't touched, and neither is the app's own name in the header (.wordmark). */
 const TRK_RX = /(?<![Jj]ob )\b([Tt])racker( files?|s)?\b/g;
 const relabel = s => s.replace(/No spreadsheet yet\./g, "No job tracker file yet.")
   .replace(TRK_RX, (m, t, more) => `${t === "T" ? "Job" : "job"} tracker ${more === "s" || more === " files" ? "files" : "file"}`);
-const NO_RELABEL = "textarea,input,script,style,code,pre";
+const NO_RELABEL = "textarea,input,script,style,code,pre,.wordmark";
 function relabelTree(node) {
   if (node.nodeType === 3) {
     const p = node.parentElement;
@@ -5367,7 +5627,7 @@ async function updateInUse() {
 async function trackerDialog() {
   const { t, ts } = await chooseTracker(), pin = (await settings()).tracker_file || "";
   let html;
-  if (!t) html = `<p class="note" style="margin:0 0 12px">You don’t have a job tracker file yet. Job Line keeps every role you find and apply to in it.</p>
+  if (!t) html = `<p class="note" style="margin:0 0 12px">You don’t have a job tracker file yet. Job tracker keeps every role you find and apply to in it.</p>
     <div class="row2"><button class="btn primary" type="button" data-td="search">Search for jobs</button><button class="btn" type="button" data-td="add">${PLUS}Add job tracker file</button></div>
     <p class="note" style="margin:12px 0 0">Or <button class="linkbtn" type="button" data-td="empty">start an empty job tracker file</button> and fill it in yourself.</p>`;
   else {
@@ -5464,7 +5724,7 @@ async function trackerWhere(t) {
 let trkFill = 0;
 /* After a job tracker file is made (a search's results, Generate, or adding one) or results are added to it, the card
    says where they went: Applications. "seen" is what the card showed last; "news" stays until Applications is opened. */
-let trkSeen = null, trkNews = null;
+let trkSeen = null, trkNews = null, trkShow = false;   // trkShow: scroll the card into view once it shows fresh news
 document.addEventListener("click", e => { if (e.target.closest && e.target.closest('nav.views [data-view="tracker"]')) trkNews = null; }, true);
 function trackerNews(t, ts, count) {
   const files = new Set(ts.map(x => x.file));
@@ -5472,7 +5732,7 @@ function trackerNews(t, ts, count) {
     if (!trkSeen.files.has(t.file)) trkNews = { file: t.file, made: true, count };
     else if (trkSeen.file === t.file && typeof count === "number" && typeof trkSeen.count === "number" && count > trkSeen.count)
       trkNews = { file: t.file, made: false, count: count - trkSeen.count + (trkNews && trkNews.file === t.file && !trkNews.made ? trkNews.count : 0) };
-    if (trkNews && trkNews !== (trkSeen.news || null)) note(trkNews.made ? "Your job tracker file is ready. Go to Applications to see the results." : "Added to your job tracker file. Go to Applications to see them.");
+    if (trkNews && trkNews !== (trkSeen.news || null)) trkShow = true, note(trkNews.made ? "Your job tracker file is ready. Go to Applications to see the results." : "Added to your job tracker file. Go to Applications to see them.");
   }
   if (trkNews && (!t || trkNews.file !== t.file)) trkNews = null;
   trkSeen = { file: t ? t.file : "", count, files, news: trkNews };
@@ -5484,7 +5744,7 @@ async function fillTrackerCard(box) {
   if (!t) {
     trackerNews(null, ts, 0);
     html = `<h3>${SHEET}You need a job tracker file</h3>
-      <p class="note">Job Line keeps every role you find and apply to in one Excel file: your job tracker file. Get one in either of these ways.</p>
+      <p class="note">Job tracker keeps every role you find and apply to in one Excel file: your job tracker file. Get one in either of these ways.</p>
       <ol class="sltways">
         <li><span class="hnum" aria-hidden="true">1</span><div><b>Search for jobs</b><span>Fill in what you’re looking for below. The results become your job tracker file.</span></div><button class="btn small primary" type="button" data-tk="search">Search for jobs</button></li>
         <li><span class="hnum" aria-hidden="true">2</span><div><b>Add your job tracker file</b><span>Already have one, like Job_Search_Tracker.xlsx? Add it from your computer.</span></div><button class="btn small" type="button" data-tk="add">${PLUS}Add job tracker file</button></li>
@@ -5510,6 +5770,10 @@ async function fillTrackerCard(box) {
   if (seq !== trkFill) return;
   box.classList.toggle("none", !t);
   box.innerHTML = html;
+  if (trkShow) {
+    trkShow = false;
+    if (document.body.dataset.view === "search") box.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth", block: "start" });
+  }
   const again = () => fillTrackerCard(box);
   box.querySelectorAll("[data-tk]").forEach(el => {
     const a = el.dataset.tk;
@@ -5538,15 +5802,15 @@ async function fillTrackerCard(box) {
 const FOLDER = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M2.25 4.75a1.25 1.25 0 0 1 1.25-1.25h2.6l1.5 1.5h4.9a1.25 1.25 0 0 1 1.25 1.25v5.5a1.25 1.25 0 0 1-1.25 1.25h-9a1.25 1.25 0 0 1-1.25-1.25z"/></svg>';
 async function fillFolder(box) {
   if (!canFolder()) {
-    box.innerHTML = `<div class="rsfrow"><div><b>${FOLDER}Documents are kept in this browser</b><span class="note">This browser can’t save into a folder on your computer. Use the Word and PDF buttons below to download each one, or open Job Line in Chrome or Edge to save them to a folder automatically.</span></div></div>`;
+    box.innerHTML = `<div class="rsfrow"><div><b>${FOLDER}Documents are kept in this browser</b><span class="note">This browser can’t save into a folder on your computer. Use the Word and PDF buttons below to download each one, or open Job tracker in Chrome or Edge to save them to a folder automatically.</span></div></div>`;
     return;
   }
   const h = await docFolder(), pending = ((await kv.get("docpending")) || []).length, perm = h ? await folderReady(false) : "none";
-  const wait = pending ? ` ${pending} ${pending === 1 ? "file is" : "files are"} waiting for your permission to be saved there.` : perm === "needs-permission" ? " Your browser will ask to let Job Line use it the next time you save." : "";
+  const wait = pending ? ` ${pending} ${pending === 1 ? "file is" : "files are"} waiting for your permission to be saved there.` : perm === "needs-permission" ? " Your browser will ask to let Job tracker use it the next time you save." : "";
   box.innerHTML = h
     ? `<div class="rsfrow"><div><b>${FOLDER}Saving to the “${esc(h.name)}” folder</b><span class="note">Your job tracker files, custom resumes and cover letters are saved there, in the Job tracker files, Custom resumes and Cover letters folders. Resumes and letters come as a Word file and a PDF. A copy also stays in this browser.${wait}</span></div>
       <div class="rsdbtn">${pending ? `<button class="btn small primary" type="button" data-fa="flush">Save them now</button>` : ""}<button class="btn small" type="button" data-fa="pick">Change folder</button><button class="btn small ghost" type="button" data-fa="stop">Stop saving there</button></div></div>`
-    : `<div class="rsfrow"><div><b>${FOLDER}Save your files to a folder</b><span class="note">Right now your tracker, custom resumes and cover letters are kept in this browser. Choose a folder on your computer, for example Documents\\Job Line, and they’re saved there too, each kind in its own folder.</span></div>
+    : `<div class="rsfrow"><div><b>${FOLDER}Save your files to a folder</b><span class="note">Right now your tracker, custom resumes and cover letters are kept in this browser. Choose a folder on your computer, for example Documents\\Job tracker, and they’re saved there too, each kind in its own folder.</span></div>
       <div class="rsdbtn"><button class="btn small primary" type="button" data-fa="pick">Choose folder</button></div></div>`;
   const done = async () => { await bump(); refreshPage(); };
   box.querySelectorAll("[data-fa]").forEach(b => b.onclick = async () => {
@@ -5554,7 +5818,7 @@ async function fillFolder(box) {
     if (a === "pick") { if (await pickDocFolder()) await done(); }
     else if (a === "flush") {
       const n = await flushToFolder(true, false);
-      note(n < 0 ? "Job Line wasn’t allowed to use the folder. Try again and choose Allow." : `Saved ${n} ${n === 1 ? "file" : "files"} to the folder.`);
+      note(n < 0 ? "Job tracker wasn’t allowed to use the folder. Try again and choose Allow." : `Saved ${n} ${n === 1 ? "file" : "files"} to the folder.`);
       await done();
     } else if (a === "stop") {
       await kv.del("dochandle"); await kv.del("docpending");
@@ -5577,7 +5841,7 @@ async function showDocs(kind) {
     body => body.querySelector(".sldocs").appendChild(box));
 }
 
-/* Pick the folder, then copy every resume, letter and tracker Job Line already kept into it. */
+/* Pick the folder, then copy every resume, letter and tracker Job tracker already kept into it. */
 async function pickDocFolder() {
   let h;
   try { h = await window.showDirectoryPicker({ id: "jobline-docs", mode: "readwrite", startIn: "documents" }); }
@@ -5585,7 +5849,7 @@ async function pickDocFolder() {
   await kv.set("dochandle", h);
   const n = await flushToFolder(true, true), tn = n < 0 ? 0 : await trackersToFolder();
   const got = [tn && `${tn} ${tn === 1 ? "tracker" : "trackers"}`, n > 0 && `${n} ${n === 1 ? "document file" : "document files"}`].filter(Boolean);
-  note(n < 0 ? "Job Line wasn’t allowed to save into that folder." : `Saving to “${h.name}”.${got.length ? ` Copied ${got.join(" and ")} into it.` : ""}`);
+  note(n < 0 ? "Job tracker wasn’t allowed to save into that folder." : `Saving to “${h.name}”.${got.length ? ` Copied ${got.join(" and ")} into it.` : ""}`);
   return true;
 }
 
@@ -5610,7 +5874,7 @@ function fillDocs(box, list, empty) {
   if (!list.length) { box.innerHTML = `<h3>${esc(title)}</h3><p class="note">${esc(empty)}</p>`; return; }
   box.innerHTML = `<h3>${esc(title)} <span class="rscount">${list.length}</span></h3><ul class="rsdlist">` + list.map((d, i) =>
     `<li><div class="rsdname"><b title="${esc(d.name)}">${esc(d.name)}</b><span>${esc(d.role && d.company ? `${d.role}, ${d.company}` : d.folder)}. Saved ${esc(when(d.at))}${d.inFolder ? ", also in your folder" : ""}</span></div>`
-    + `<div class="rsdbtn">${d.pdf ? `<button class="btn small" type="button" data-i="${i}" data-f="pdf">PDF</button>` : ""}${d.docx ? `<button class="btn small ghost" type="button" data-i="${i}" data-f="docx">Word</button>` : ""}</div></li>`).join("") + `</ul>`;
+    + `<div class="rsdbtn">${d.pdf ? `<button class="btn small" type="button" data-i="${i}" data-f="pdf">PDF</button>` : ""}${d.docx ? `<button class="btn small" type="button" data-i="${i}" data-f="docx">Word</button>` : ""}</div></li>`).join("") + `</ul>`;
   box.querySelectorAll("[data-f]").forEach(b => b.onclick = () => {
     const d = list[+b.dataset.i], f = d[b.dataset.f];
     if (b.dataset.f === "pdf") { const w = window.open(fileInfo(f.rel, f.blob).url, "_blank"); if (!w) downloadBlob(f.blob, f.name); }
@@ -5768,7 +6032,7 @@ function activeChips(){
 }
 
 /* ---------- Rendering ---------- */
-function renderAll(){renderHeader();renderStations();renderFilters();renderList();renderDetail();renderBreakdown()}
+function renderAll(){renderHeader();renderStations();renderFilters();renderList();renderDetail();renderBreakdown();renderInterviews()}
 
 function renderMode(){
   const b=$("modeBtn"),ai=(S.settings&&S.settings.ai)||{},p=ai.provider,nm={anthropic:"Anthropic",openai:"OpenAI",local:"Local model"}[p];
@@ -5782,7 +6046,7 @@ function renderMode(){
   b.setAttribute("aria-label",`Mode: ${txt}${model?`, model ${model}`:""}. Opens Settings.`);   // the text can be hidden on small screens
   b.title=model?`Mode: ${txt}
 Model: ${model}
-Click to change it in Settings.`:"Which AI mode Job Line is using. Click to change it in Settings.";
+Click to change it in Settings.`:"Which AI mode Job tracker is using. Click to change it in Settings.";
 }
 function renderHeader(){
   renderMode();
@@ -5914,7 +6178,7 @@ function renderList(){
   $("chips").innerHTML=chips.map(([k,l,v])=>`<button type="button" class="chip" data-k="${k}" aria-label="Remove filter ${esc((l?l+" ":"")+v)}">${l?`<b>${esc(l)}</b>`:""}${esc(v)}<span aria-hidden="true">×</span></button>`).join("");
   $("chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>setF({[b.dataset.k]:FDEF[b.dataset.k]}));
   if(!n){
-    $("list").innerHTML=`<div class="empty"><strong>No listings yet</strong>Put your Job_Search_Tracker.xlsx in the tracker folder and this page picks it up within a few seconds. Or let Job Line start one for you.<p><button class="btn small" type="button" data-act="create-tracker">Create a new tracker</button> <button class="btn small" type="button" data-go-view="search">Find jobs for me</button></p></div>`;
+    $("list").innerHTML=`<div class="empty"><strong>No listings yet</strong>Put your Job_Search_Tracker.xlsx in the tracker folder and this page picks it up within a few seconds. Or let Job tracker start one for you.<p><button class="btn small" type="button" data-act="create-tracker">Create a new tracker</button> <button class="btn small" type="button" data-go-view="search">Find jobs for me</button></p></div>`;
     $("list").querySelectorAll("[data-go-view]").forEach(b=>b.onclick=()=>go(b.dataset.goView));return;
   }
   if(!r.length){$("list").innerHTML=`<div class="empty"><strong>Nothing matches these filters</strong>Clear filters to see every listing.</div>`;return}
@@ -5945,9 +6209,13 @@ function renderDetail(){
   const id=S.sel,p=progOf(id),st=stageOf(id);
   const link=/^https?:\/\//i.test(j.source||"")?j.source:"";
   let host="";try{host=new URL(link).hostname.replace(/^www\.|^ca\./,"")}catch(e){}
-  const q=encodeURIComponent(`${j.company} ${j.role} ${j.location} job`);
+  const q=encodeURIComponent(`${j.company} ${j.role} ${j.location} job`),ex=postingExtras(j);
   el.innerHTML=`
   <button class="btn small back" type="button" id="backBtn">Back to list</button>
+  <div class="dbar" id="dbar"><div class="dbar-in">
+    <div class="dbar-t"><span class="co">${esc(j.company)}</span><b>${esc(j.role)}</b></div>
+    ${link?`<a class="btn small primary" href="${esc(safeUrl(link))}" target="_blank" rel="noopener">${icon("external")}Open listing</a>`:""}
+  </div></div>
   <div class="dhead">
     <div class="co">${esc(j.company)}</div>
     <h2>${esc(j.role)}</h2>
@@ -5960,23 +6228,29 @@ function renderDetail(){
       <div><span>How you apply</span>${j.apply?esc(j.apply.text)+` <small class="note">${esc(j.apply.label)}</small>`:"No link"}</div>
       <div><span>Skills match</span>${matchPct(j)!=null?`<b style="color:${matchPct(j)>=70?"var(--green)":matchPct(j)>=40?"var(--amber)":"var(--red)"}">${matchPct(j)}%</b>`:"Not scored"}</div>
       <div><span>Posting age</span>${esc(ageText(j))}</div>
+      ${ex.closes?`<div><span>Closes</span>${closesHtml(ex.closes)}</div>`:""}
     </div>
     ${possiblyClosed(j)?`<p class="note" style="color:var(--red);margin:10px 0 0">The tracker flags this one as possibly closed. Check the company’s careers page before spending time on it.</p>`:""}
-    ${j.notes?`<p class="note" style="margin:8px 0 0">${esc(j.notes)}</p>`:""}
+    ${ex.notes?`<p class="note" style="margin:8px 0 0">${esc(ex.notes)}</p>`:""}
     ${staleHtml(j)}
   </div>
   <div class="acts">
-    ${link?`<a class="btn primary" href="${esc(safeUrl(link))}" target="_blank" rel="noopener">${icon("external")}Open listing on ${esc(host||"job board")}</a>`:""}
-    <a class="btn" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener">${icon("globe")}Find on company site</a>
-    <button class="btn" type="button" id="researchBtn">${icon("building")}Research the company</button>
-    <button class="btn" type="button" id="prepBtn">${icon("mic")}Interview prep</button>
-    ${p.followUp?`<button class="btn" type="button" id="calJob">${icon("calendar")}Add follow-up to calendar</button>`:""}
-    <button class="btn ghost" type="button" id="hideCo">${icon("hide")}Hide this company</button>
-    ${st==="queue"?`<button class="btn amber" type="button" id="markApplied">${icon("check")}Mark as applied today</button>`:""}
+    <div class="acts-main">
+      ${link?`<a class="btn primary" href="${esc(safeUrl(link))}" target="_blank" rel="noopener">${icon("external")}Open listing on ${esc(host||"job board")}</a>`:""}
+      ${st==="queue"?`<button class="btn amber" type="button" id="markApplied">${icon("check")}Mark as applied today</button>`:""}
+    </div>
+    <div class="acts-more">
+      ${ex.careers?`<a class="btn" href="${esc(safeUrl(ex.careers))}" target="_blank" rel="noopener">${icon("globe")}Company careers page</a>`
+        :`<a class="btn" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener" title="No careers page was saved for this job, so this searches the web">${icon("globe")}Search for it</a>`}
+      <button class="btn" type="button" id="researchBtn">${icon("building")}Research the company</button>
+      <button class="btn prep-hi" type="button" id="prepBtn">${icon("mic")}Interview prep${["screen","interview"].includes(st)?`<span class="prep-soon">Interview stage</span>`:""}</button>
+      ${p.followUp?`<button class="btn" type="button" id="calJob">${icon("calendar")}Add follow-up to calendar</button>`:""}
+    </div>
+    <div class="acts-foot"><button class="btn ghost small" type="button" id="hideCo">${icon("hide")}Hide this company</button></div>
   </div>
-  <div class="sec"><h3><span class="k" style="background:var(--ink)"></span>What they’re asking for</h3><p>${esc(j.requirements||"No details in the tracker.")}</p></div>
-  <div class="sec"><h3><span class="k" style="background:var(--green)"></span>Where your resume matches</h3><p>${esc(j.match||"—")}</p></div>
-  <div class="sec"><h3><span class="k" style="background:var(--amber)"></span>Gaps to cover</h3><p>${esc(j.gaps||"None noted.")}</p></div>
+  <div class="sec ask"><h3><span class="k" style="background:var(--blue)"></span>What they’re asking for</h3>${notesHtml(j.requirements,"No details in the tracker.")}</div>
+  <div class="sec good"><h3><span class="k" style="background:var(--green)"></span>Where your resume matches</h3>${notesHtml(j.match,"—")}</div>
+  <div class="sec gap"><h3><span class="k" style="background:var(--red)"></span>Gaps to cover</h3>${notesHtml(j.gaps,"None noted.")}</div>
   ${skillsSec(j)}
   ${paySec(Object.assign({id},j))}
   <div class="sec profile" id="profileSec">
@@ -6024,6 +6298,10 @@ function renderDetail(){
     <div class="saved" id="savedNote">Changes save straight into your tracker spreadsheet.</div>
   </div>`;
   $("backBtn").onclick=()=>el.classList.add("closed");
+  /* The slim title bar: shown once the big title has scrolled out of the panel, so you always know which job you're on */
+  const dbar=$("dbar"),dh2=el.querySelector(".dhead h2");
+  const dbarSync=()=>{const on=el.scrollTop>dh2.offsetTop+dh2.offsetHeight-12;dbar.classList.toggle("on",on);dbar.inert=!on};
+  el.onscroll=dbarSync;dbarSync();
   $("researchBtn").onclick=()=>openCompany(id);
   if($("markApplied"))$("markApplied").onclick=()=>{
     const d=today();
@@ -6172,7 +6450,7 @@ function renderBreakdown(){
 async function api(url,body){
   const res=await fetch(url,body===undefined?{}:{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify(body)});
   const data=await res.json().catch(()=>({}));
-  if(!res.ok)throw new Error(data.error||"Something went wrong talking to the Job Line server.");
+  if(!res.ok)throw new Error(data.error||"Something went wrong talking to the Job tracker server.");
   return data;
 }
 function fuDays(){return (S.settings&&+S.settings.follow_up_days)||10}
@@ -6264,12 +6542,12 @@ function showResume(){
   el.querySelectorAll("input[name=defres]").forEach(r=>r.onchange=async()=>{try{await api("/api/resume/select",{file:r.value});await loadState();showResume();toast("Default resume changed.")}catch(e){toast(e.message)}});
 }
 $("resPick").onclick=()=>$("resFile").click();
-/* ---------- Resume: the file Job Line tailors from, what it finds in it, and how it covers the listings ---------- */
+/* ---------- Resume: the file Job tracker tailors from, what it finds in it, and how it covers the listings ---------- */
 function renderResume(){
   const el=$("resumepage");if(!el||VIEW!=="resume")return;
-  const r=S.resume||{},head=`<div class="vhead"><h2>Your resume</h2><p>The resume Job Line tailors for each application. Your original file is never changed.</p></div>`;
+  const r=S.resume||{},head=`<div class="vhead"><h2>Your resume</h2><p>The resume Job tracker tailors for each application. Your original file is never changed.</p></div>`;
   const up=(label,cls)=>`<button class="btn${cls?" "+cls:""}" type="button" data-act="upload-resume">${icon("plus")}${label}</button>`;
-  if(!r.ok){el.innerHTML=head+`<div class="empty-brief"><h3>No resume yet</h3><p class="note" style="margin:0 0 16px;max-width:60ch">Upload the resume you send to employers. A Word file works best; a text-based PDF, .txt or .md file also works. Job Line reads it to tailor resumes and cover letters, and to show how well you match each listing.</p>${up("Upload resume","primary")}</div>`;return}
+  if(!r.ok){el.innerHTML=head+`<div class="empty-brief"><h3>No resume yet</h3><p class="note" style="margin:0 0 16px;max-width:60ch">Upload the resume you send to employers. A Word file works best; a text-based PDF, .txt or .md file also works. Job tracker reads it to tailor resumes and cover letters, and to show how well you match each listing.</p>${up("Upload resume","primary")}</div>`;return}
   const meta=(S.resumes||[]).find(x=>x.file===r.file),secs=r.sections||[],skills=r.skills||[];
   const usual=[["Summary",/SUMMARY|PROFILE|OBJECTIVE|ABOUT/],["Skills",/SKILL|TECHNOLOG|COMPETENC/],["Experience",/EXPERIENCE|EMPLOYMENT|WORK HISTORY|CAREER/],["Education",/EDUCATION|TRAINING|CERTIF/]];
   const absent=usual.filter(([,rx])=>!secs.some(s=>rx.test(s))).map(([n])=>n);
@@ -6292,10 +6570,10 @@ function renderResume(){
     <section class="panel rspanel"><h3>Sections</h3>
       ${secs.length?chips(secs.map(esc)):`<p class="note">No section headings found. Put each heading on its own line in capitals (SUMMARY, SKILLS, EXPERIENCE, EDUCATION) so drafts keep your layout.</p>`}
       ${secs.length&&absent.length?`<p class="note">Most resumes also have: ${absent.join(", ")}.</p>`:""}</section>
-    <section class="panel rspanel"><h3>Skills Job Line recognises</h3>
-      ${skills.length?chips(skills.map(esc)):`<p class="note">None of the skills Job Line knows were found. Listing your tools and languages in a SKILLS section helps the match.</p>`}
+    <section class="panel rspanel"><h3>Skills Job tracker recognises</h3>
+      ${skills.length?chips(skills.map(esc)):`<p class="note">None of the skills Job tracker knows were found. Listing your tools and languages in a SKILLS section helps the match.</p>`}
       <p class="note">These are what the skills match on each listing compares against.</p></section>
-    <details class="panel rspanel rstext"><summary>The text Job Line reads</summary><p class="note">If something looks jumbled here, drafts will be too. Saving your resume as a simple Word file usually fixes it.</p><pre>${esc(r.text||"")}</pre></details>
+    <details class="panel rspanel rstext"><summary>The text Job tracker reads</summary><p class="note">If something looks jumbled here, drafts will be too. Saving your resume as a simple Word file usually fixes it.</p><pre>${esc(r.text||"")}</pre></details>
   </div>`;
   el.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));
   if($("rsFolder"))$("rsFolder").onclick=()=>openPath({what:"resume"});
@@ -6309,7 +6587,7 @@ function resumeChooser(r){
   const files=S.resumes||[],pinned=(S.settings&&S.settings.resume_file)||"";
   if(files.length<2&&!pinned)return "";
   const row=f=>`<label class="trow"><input type="radio" name="rspick" value="${esc(f.file)}"${pinned===f.file?" checked":""}><span><b>${esc(f.file)}</b>${f.file===r.file?` <span class="achip ak-quick">In use</span>`:""}<span class="note">${f.mtime?`Modified ${esc(fmtWhen(f.mtime))}, `:""}${f.kb} KB</span></span></label>`;
-  return `<section class="panel rspanel rspick"><h3>Which resume to use</h3><div class="trkpick"><p class="note" style="margin:0 0 6px">${files.length} resumes are in the folder. Job Line picks one automatically, or pick a file to always use it. You can still choose a different one on a single job.</p>
+  return `<section class="panel rspanel rspick"><h3>Which resume to use</h3><div class="trkpick"><p class="note" style="margin:0 0 6px">${files.length} resumes are in the folder. Job tracker picks one automatically, or pick a file to always use it. You can still choose a different one on a single job.</p>
     <label class="trow"><input type="radio" name="rspick" value=""${pinned?"":" checked"}><span><b>Automatic</b><span class="note">A Word file first, then PDF, then .md or .txt; the newest of that kind</span></span></label>${files.map(row).join("")}</div></section>`;
 }
 document.addEventListener("click",e=>{if(e.target.closest&&e.target.closest("[data-act=upload-resume]"))$("resFile").click()});
@@ -6371,7 +6649,7 @@ async function refreshVersion(){try{const r=await api("/api/version");S.version=
 async function poll(){
   if(S.busy||document.hidden)return;
   try{const r=await api("/api/version");if(r.v!==S.version){S.version=r.v;await loadState()}}
-  catch(e){const b=$("banner");b.textContent="Can’t reach the Job Line server. Is its window still open? Start it again with the start file in your JobLine folder.";b.classList.remove("hidden")}
+  catch(e){const b=$("banner");b.textContent="Can’t reach the Job tracker server. Is its window still open? Start it again with the start file in your JobLine folder.";b.classList.remove("hidden")}
 }
 
 
@@ -6394,10 +6672,13 @@ function inlineMd(x){return esc(x).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>").replace
 const SECTION_TYPES=[["glance",/glance|overview/i],["mission",/mission|direction/i],["culture",/work there|culture|like to work/i],["interview",/interview/i],["prepare",/prepare/i],["questions",/question/i],["check",/check|before accepting|red flag/i]];
 const SECTION_META={glance:{c:"var(--blue)",s:"Overview"},mission:{c:"var(--green)",s:"Direction"},culture:{c:"var(--amber)",s:"Working there"},interview:{c:"var(--blue)",s:"Interviews"},prepare:{c:"var(--green)",s:"Prepare"},questions:{c:"var(--amber)",s:"Questions to ask"},check:{c:"var(--red)",s:"Check first"},other:{c:"var(--steel)",s:"More"}};
 const WIDE={culture:1,interview:1,check:1,other:1};
+/* Briefings saved before pasted replies were cleaned can still hold ChatGPT's citation markers: "([Site][1])" in the
+   text and '[1]: https://... "Title"' lines at the end. Neither is shown. */
 function parseBrief(t){
   const secs=[];let cur=null;
   for(const raw of String(t||"").split("\n")){
-    const l=raw.trim();if(!l)continue;
+    if(/^\s*\[[^\]]+\]:\s*<?https?:\/\//.test(raw))continue;
+    const l=raw.replace(/\s*\((?:\s*\[[^\]]+\]\[[^\]]+\]\s*,?)+\)/g,"").trim();if(!l)continue;
     if(/^#{1,4}\s/.test(l)){const title=l.replace(/^#+\s*/,"");const type=(SECTION_TYPES.find(([,re])=>re.test(title))||["other"])[0];cur={title,type,items:[],paras:[]};secs.push(cur);continue}
     if(!cur){cur={title:"",type:"other",items:[],paras:[]};secs.push(cur)}
     if(/^[-*•]\s+/.test(l))cur.items.push(l.replace(/^[-*•]\s+/,""));
@@ -6445,16 +6726,24 @@ function renderToc(secs){
   el.innerHTML=secs.map((s,i)=>{const m=SECTION_META[s.type]||SECTION_META.other;return `<button type="button" data-go="sec-${i}" style="--k:${m.c}">${esc(s.type==="other"?(s.title||m.s):m.s)}</button>`}).join("");
   el.querySelectorAll("button").forEach(b=>b.onclick=()=>{const t=$(b.dataset.go);if(t)t.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"})});
 }
+/* The company page (briefing and interview prep) lives under the Interview prep tab, wherever it was opened from.
+   S.companyFrom remembers that place, so its back button returns there. */
+function setView(v){VIEW=v;document.body.dataset.view=v;document.querySelectorAll(".views button").forEach(b=>b.setAttribute("aria-current",b.dataset.view===v?"page":"false"))}
 async function openCompany(id,focus){
+  if(!S.companyId)S.companyFrom=VIEW==="interviews"?"interviews":"tracker";
+  setView("interviews");
   S.companyId=id;document.body.classList.add("in-company");
   $("company").innerHTML='<div class="thinking"><i></i>Opening…</div>';
   window.scrollTo(0,0);
   if(RESEARCH.load)await RESEARCH.load(id);
+  S.cvTab=focus==="prep"?"prep":"info";
   renderCompany();
-  if(focus==="prep"){const el=$("prepSec");if(el)el.scrollIntoView({block:"start"})}
 }
 function closeCompany(reopen){
-  S.companyId=null;document.body.classList.remove("in-company");$("company").innerHTML="";
+  const from=reopen?"tracker":(S.companyFrom||"tracker");
+  S.companyId=null;S.companyFrom=null;document.body.classList.remove("in-company");$("company").innerHTML="";
+  setView(from);
+  if(from==="interviews")renderInterviews();
   if(reopen){renderList();renderDetail();$("detail").classList.remove("closed")}
 }
 let briefCtl=null;
@@ -6468,9 +6757,9 @@ function renderCompany(){
   if(!j){closeCompany();return}
   const r=RESEARCH.get(id)||{},name=cleanCompany(j.company),p=progOf(id);
   const plate=(k,v,style)=>`<div><dt>${k}</dt><dd${style?` style="${style}"`:""}>${v}</dd></div>`;
-  const b=r.text?renderBrief(r,false):null;
+  const b=r.text?renderBrief(r,false):null,built=!!(r.text||PREP[id]),tab=S.cvTab==="prep"?"prep":"info",qn=prepCount(id);
   el.innerHTML=`
-  <div class="cvbar"><button class="btn" type="button" id="cvBack">Back to listings</button><button class="btn" type="button" id="cvJob">Back to this job</button></div>
+  <div class="cvbar"><button class="btn" type="button" id="cvBack">${S.companyFrom==="interviews"?"Back to interview prep":"Back to listings"}</button><button class="btn" type="button" id="cvJob">Back to this job</button></div>
   <header class="panel hero" style="--fitc:${FIT_COLOR[j.fit]||"var(--steel)"}">
     <div class="mono" aria-hidden="true">${esc(initials(name))}</div>
     <div>
@@ -6485,51 +6774,55 @@ function renderCompany(){
       </dl>
     </div>
     <div class="hero-act">
-      <div class="row2"><button class="btn hidden" type="button" id="briefStop">Stop</button><button class="btn ${r.text?"":"primary"}" type="button" id="briefBtn">${r.text?"Refresh briefing":"Build briefing"}</button></div>
-      <p class="note" id="briefMeta">${esc(RESEARCH.metaText(r))}</p>
+      <div class="row2"><button class="btn hidden" type="button" id="briefStop">Stop</button><button class="btn ${built?"":"primary"}" type="button" id="briefBtn">${icon("check")}${built?"Rebuild prep":"Build prep"}</button></div>
+      <p class="note" id="briefMeta">${esc(prepMeta(r,id))}</p>
     </div>
   </header>
   ${isUnnamed(j)?`<div class="banner" style="margin-top:12px">This listing doesn’t name the employer, so research is limited. Open the listing to find out who it is.</div>`:""}
-  ${prepSecHtml(id)}
+  <div class="cvtabs" role="tablist" aria-label="Prep sections">
+    <button type="button" role="tab" id="cvtab-info" data-tab="info" aria-controls="cvpanel-info" aria-selected="${tab==="info"}" tabindex="${tab==="info"?0:-1}">${icon("building")}Company and role</button>
+    <button type="button" role="tab" id="cvtab-prep" data-tab="prep" aria-controls="cvpanel-prep" aria-selected="${tab==="prep"}" tabindex="${tab==="prep"?0:-1}">${icon("chat")}Interview questions${qn?`<span class="ivn">${qn}</span>`:""}</button>
+  </div>
+  <div class="cvpanel" id="cvpanel-prep" role="tabpanel" aria-labelledby="cvtab-prep"${tab==="prep"?"":" hidden"}>${prepSecHtml(id)}</div>
+  <div class="cvpanel" id="cvpanel-info" role="tabpanel" aria-labelledby="cvtab-info"${tab==="info"?"":" hidden"}>
   <nav class="toc" id="toc" aria-label="Briefing sections"></nav>
   <div class="cv">
     <div class="cvmain" id="briefOut">${b?b.html:emptyBrief(name)}</div>
     <aside class="cvside">
-      <section class="side-card" aria-label="Research links">
+      <section class="side-card cvlinks" aria-label="Research links">
         <h3>Look it up yourself</h3>
         <p class="note" style="margin:0">Current ratings, reviews and people, one click away.</p>
         ${researchLinks(j).map(g=>`<div class="lgroup"><h4>${esc(g.h)}</h4>${g.note?`<p class="note">${esc(g.note)}</p>`:""}<div class="tiles">${g.items.map(([site,t,u])=>`<a class="tile" href="${esc(u)}" target="_blank" rel="noopener"><span class="site">${esc(site)}</span>${esc(t)}</a>`).join("")}</div></div>`).join("")}
       </section>
-      <section class="side-card">
-        <h3>My notes</h3>
-        <textarea id="cvNotes" placeholder="Who you spoke to, what you learned, things to bring up in the interview…">${esc(r.notes||"")}</textarea>
-        <div class="saved" id="cvSaved"></div>
-      </section>
-      <section class="side-card" style="border-top:4px solid var(--amber)">
+      <section class="side-card cvneeds" style="border-top:4px solid var(--amber)">
         <h3>What this role needs</h3>
         <p style="margin:6px 0 8px">${esc(j.requirements||"No details in the tracker.")}</p>
         <p class="note" style="margin:0"><b>Gaps to cover:</b> ${esc(j.gaps||"None noted.")}</p>
       </section>
     </aside>
+  </div>
   </div>`;
   if(b)renderToc(b.secs);
+  bindCvTabs();
   $("cvBack").onclick=()=>closeCompany(false);
   $("cvJob").onclick=()=>{S.sel=id;closeCompany(true)};
-  $("cvNotes").addEventListener("change",async()=>{
-    $("cvSaved").textContent="Saving…";
-    try{await RESEARCH.saveMeta(id,{notes:$("cvNotes").value});if($("cvSaved"))$("cvSaved").textContent="Saved."}catch(e){if($("cvSaved"))$("cvSaved").textContent=e.message||"Couldn’t save."}
-  });
   bindBrief(id);setupPrep(id);
   const btn=$("briefBtn"),stop=$("briefStop"),out=$("briefOut");
   if($("briefBtn2"))$("briefBtn2").onclick=()=>btn.click();
   btn.onclick=async()=>{
     briefCtl=new AbortController();btn.disabled=true;stop.classList.remove("hidden");
     out.innerHTML=skeleton(RESEARCH.busyText());$("toc").innerHTML="";
+    const both=isManual()&&S.resume.ok;
+    if($("prepSec"))$("prepSec").innerHTML=skeleton(both?"Waiting for your chat’s reply…":S.resume.ok?"Your interview questions come next, once the company briefing is done.":"Add your resume to get interview questions.");
     if(typeof S.drafting==="number")S.drafting++;
     try{
       const res=await RESEARCH.generate(Object.assign({id},j),{signal:briefCtl.signal,onText:t=>{const x=renderBrief({text:t},true);out.innerHTML=x.html;renderToc(x.secs)}});
       const keep=RESEARCH.get(id)||{};
-      await RESEARCH.store(id,Object.assign({},res,{notes:keep.notes||($("cvNotes")?$("cvNotes").value:""),checks:{}}));
+      await RESEARCH.store(id,Object.assign({},res,{notes:keep.notes||"",checks:{}}));
+      if(!both&&S.resume.ok&&!isManual()){         // with an AI key or a local model, the questions follow the briefing
+        if(S.companyId===id&&$("prepSec"))$("prepSec").innerHTML=skeleton("Writing your interview questions. This takes about a minute.");
+        try{PREP[id]=(await api("/api/prep",{id})).prep}catch(e){toast(e.message||"The interview questions didn’t finish. Try Rebuild prep.")}
+      }else if(!S.resume.ok)toast("Add your resume in the Resume tab to get interview questions too.");
       if(S.companyId===id)renderCompany();
     }catch(e){
       if(S.companyId!==id)return;
@@ -6557,7 +6850,7 @@ function bindBrief(id){
 }
 
 function webCapable(){const p=S.settings&&S.settings.ai&&S.settings.ai.provider;return p==="anthropic"||p==="openai"}
-/* Copy and paste mode: no API. Job Line builds the prompt, the user runs it in a free ChatGPT or Claude chat and pastes the reply back. */
+/* Copy and paste mode: no API. Job tracker builds the prompt, the user runs it in a free ChatGPT or Claude chat and pastes the reply back. */
 const isManual=()=>!!(S.settings&&S.settings.ai&&S.settings.ai.provider==="manual");
 const unfence=t=>String(t||"").trim().replace(/^```[a-z]*\s*\n/i,"").replace(/\n```\s*$/,"").trim();
 /* Prompts for a chat website carry a version of your resume with your name and contact details replaced by placeholders.
@@ -6594,13 +6887,17 @@ const RESEARCH={
   get:id=>S.research[id],
   async load(id){try{const r=await api("/api/research/get",{id});S.research[id]=r.research||null}catch(e){S.research[id]=null}},
   metaText:r=>r.at?(r.web?`Researched on the web on ${r.at} with ${r.provider}. Sources are listed below the briefing.`:`Built on ${r.at} from the model’s general knowledge, without a web search. Check ratings and anything time-sensitive with the links on the right.`)
-    :(isManual()?"Job Line writes the prompt. You paste it into ChatGPT or Claude, then paste the reply back here. Switch on the chat’s web search for current ratings and news."
+    :(isManual()?"Job tracker writes the prompt. You paste it into ChatGPT or Claude, then paste the reply back here. Switch on the chat’s web search for current ratings and news."
     :webCapable()?"Searches the web for current information, including ratings and reviews, and lists its sources. Takes about a minute."
     :"Your local model can’t search the web, so this comes from what it already knows. Ratings and reviews are in the links on the right."),
   busyText:()=>isManual()?"Waiting for your chat’s reply…":webCapable()?"Searching the web and writing the briefing. This usually takes about a minute.":"Writing the briefing…",
   async generate(j,o){
     if(!S.aiReady){openSettings();throw new Error("Set up drafting in Settings first.")}
-    if(isManual()){
+    if(isManual()&&S.resume.ok){                   // one prompt fills the briefing and the interview guide
+      const d=await askBoth(j.id);
+      return d.research;
+    }
+    if(isManual()){                                // no resume yet, so the briefing on its own
       const p=await api("/api/prompt",{kind:"research",id:j.id});
       const r=await askChat({title:"Ask your chat to research "+cleanCompany(j.company),prompt:p.prompt,restore:p.restore,promptAlt:p.promptNoWeb,altLabel:"My chat can search the web",web:true});
       return (await api("/api/import",{kind:"research",id:j.id,text:r.text,web:r.web})).research;
@@ -6619,12 +6916,12 @@ const RESEARCH={
 let VIEW="home";
 function go(v){
   if(S.companyId)closeCompany(false);
-  VIEW=v;document.body.dataset.view=v;
-  document.querySelectorAll(".views button").forEach(b=>b.setAttribute("aria-current",b.dataset.view===v?"page":"false"));
+  setView(v);
   if(v==="home")renderHome();
   if(v==="search")renderSearch();
   if(v==="resume")renderResume();
   if(v==="offers")renderOffers();
+  if(v==="interviews")renderInterviews();
   if(v==="guide")renderGuide();
   const g=$("guideBtn");if(g)g.setAttribute("aria-pressed",String(v==="guide"));
   window.scrollTo(0,0);
@@ -6649,12 +6946,17 @@ const ICONS={
   download:'<path d="M8 2.25v8M4.75 7 8 10.25 11.25 7M2.75 13.25h10.5"/>',
   sheet:'<rect x="2.25" y="2.25" width="11.5" height="11.5" rx="2"/><path d="M2.25 6.25h11.5M6.25 6.25v7.5"/>',
   plus:'<path d="M8 3v10M3 8h10"/>',
+  chat:'<path d="M2.75 4.25a1.5 1.5 0 0 1 1.5-1.5h7.5a1.5 1.5 0 0 1 1.5 1.5v5a1.5 1.5 0 0 1-1.5 1.5H7l-3 2.5v-2.5h-.25a1.5 1.5 0 0 1-1.5-1.5z"/>',
+  star:'<path d="m8 2.5 1.7 3.45 3.8.55-2.75 2.68.65 3.78L8 11.18l-3.4 1.78.65-3.78L2.5 6.5l3.8-.55z"/>',
+  code:'<path d="m5.5 4.75-3.25 3.25 3.25 3.25M10.5 4.75l3.25 3.25-3.25 3.25"/>',
+  alert:'<path d="M8 2.75 13.75 13H2.25z"/><path d="M8 6.75v2.75M8 11.25v.01"/>',
+  question:'<circle cx="8" cy="8" r="5.75"/><path d="M6.4 6.4a1.7 1.7 0 0 1 3.2.6c0 1.1-1.6 1.4-1.6 2.4M8 11.25v.01"/>',
   book:'<path d="M8 4.25C6.75 3.25 5 2.75 2.75 2.75v9.5c2.25 0 4 .5 5.25 1.5 1.25-1 3-1.5 5.25-1.5v-9.5c-2.25 0-4 .5-5.25 1.5zM8 4.25v9.5"/>'
 };
 function icon(n){return ICONS[n]?`<svg class="ic" viewBox="0 0 16 16" aria-hidden="true">${ICONS[n]}</svg>`:""}
 /* Icons for fixed controls in the page markup (the section buttons and Settings), added once at start. */
 function addStaticIcons(){
-  const nav={home:"home",resume:"file",tracker:"briefcase",search:"search",offers:"offer"};
+  const nav={home:"home",resume:"file",tracker:"briefcase",search:"search",interviews:"mic",offers:"offer"};
   document.querySelectorAll(".views button").forEach(b=>{if(!b.querySelector(".ic")&&nav[b.dataset.view])b.insertAdjacentHTML("afterbegin",icon(nav[b.dataset.view]))});
   const sb=$("settingsBtn");if(sb&&!sb.querySelector(".ic"))sb.insertAdjacentHTML("afterbegin",icon("gear"));
   const gb=$("guideBtn");if(gb&&!gb.querySelector(".ic"))gb.insertAdjacentHTML("afterbegin",icon("book"));
@@ -6664,10 +6966,10 @@ let GUIDE=null;
 const richText=t=>esc(t).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>");
 async function renderGuide(){
   const el=$("guide");if(!el)return;
-  if(!GUIDE){el.innerHTML=`<div class="vhead"><h2>How to use Job Line</h2></div><div class="thinking"><i></i>Loading…</div>`;
-    try{GUIDE=await api("/api/guide")}catch(e){el.innerHTML=`<div class="vhead"><h2>How to use Job Line</h2><p>${esc(e.message||"Couldn’t load the guide.")}</p></div>`;return}}
+  if(!GUIDE){el.innerHTML=`<div class="vhead"><h2>How to use Job tracker</h2></div><div class="thinking"><i></i>Loading…</div>`;
+    try{GUIDE=await api("/api/guide")}catch(e){el.innerHTML=`<div class="vhead"><h2>How to use Job tracker</h2><p>${esc(e.message||"Couldn’t load the guide.")}</p></div>`;return}}
   const have=new Set(GUIDE.images||[]);
-  el.innerHTML=`<div class="vhead guidehead"><div><h2>How to use Job Line</h2><p>Set it up from scratch in about five minutes, then find jobs and apply. Each step shows what you’ll see.</p></div>
+  el.innerHTML=`<div class="vhead guidehead"><div><h2>How to use Job tracker</h2><p>Set it up from scratch in about five minutes, then find jobs and apply. Each step shows what you’ll see.</p></div>
       <a class="btn primary" href="/api/guide.pdf" download>${icon("download")}Download as PDF</a></div>
     <div class="guide">
       <nav class="gtoc" aria-label="Guide sections">${GUIDE.sections.map((s,i)=>`<a href="#g-${esc(s.id)}" data-g="${esc(s.id)}"><span>${i+1}</span>${esc(s.title)}</a>`).join("")}</nav>
@@ -6694,7 +6996,7 @@ function renderHome(){
   const hasResume=!!(S.resume&&S.resume.ok),hasJobs=all.length>0;
   const step=(n,done,title,text,btn)=>`<li class="hstep${done?" done":""}"><span class="hnum" aria-hidden="true">${done?icon("check"):n}</span><div><b>${title}</b><p>${text}</p></div>${btn}</li>`;
   const steps=hasResume&&hasJobs?"":`<section class="panel hsteps" aria-label="Get started"><header><h3>Get started in three steps</h3></header><ol>
-    ${step(1,hasResume,"Upload your resume",hasResume?`Using ${esc(S.resume.file)}.`:"Job Line tailors resumes and cover letters from it. A Word file works best.",hasResume?`<button class="btn small ghost" type="button" data-go="resume">View resume</button>`:`<button class="btn small primary" type="button" data-act="upload-resume">Upload resume</button>`)}
+    ${step(1,hasResume,"Upload your resume",hasResume?`Using ${esc(S.resume.file)}.`:"Job tracker tailors resumes and cover letters from it. A Word file works best.",hasResume?`<button class="btn small ghost" type="button" data-go="resume">View resume</button>`:`<button class="btn small primary" type="button" data-act="upload-resume">Upload resume</button>`)}
     ${step(2,hasJobs,"Search for jobs",hasJobs?`Your tracker has ${all.length} ${all.length===1?"listing":"listings"}.`:"Find jobs looks for roles that fit you, and the results become your tracker.",`<button class="btn small${hasResume&&!hasJobs?" primary":" ghost"}" type="button" data-go="search">Find jobs</button>`)}
     ${step(3,false,"See your applications","Every role you add lands in Applications, ready to apply and track.",`<button class="btn small${hasJobs?" primary":" ghost"}" type="button" data-go="tracker">Applications</button>`)}
   </ol></section>`;
@@ -6852,7 +7154,7 @@ function renderResults(){
     <div class="rtools"><div class="seg2"><button type="button" data-sv="cards" aria-current="${SVIEW==="cards"}">Cards</button><button type="button" data-sv="table" aria-current="${SVIEW==="table"}">Spreadsheet</button></div>
     ${avail.length?`<button class="btn small" type="button" id="rAll">${sel.length===avail.length?"Clear selection":"Select all"}</button>`:""}
     <button class="btn small" type="button" id="rXlsx">${icon("download")}Download as Excel</button>
-    <button class="btn small" type="button" id="rTrk" title="Saves a new tracker file in your tracker folder: your current tracker plus these results. Job Line switches to it.">${icon("sheet")}Generate tracker</button>
+    <button class="btn small" type="button" id="rTrk" title="Saves a new tracker file in your tracker folder: your current tracker plus these results. Job tracker switches to it.">${icon("sheet")}Generate tracker</button>
     <button class="btn small amber" type="button" id="rAdd"${sel.length?"":" disabled"}>${icon("plus")}${sel.length?`Add ${sel.length} to tracker`:"Add to tracker"}</button>
     <button class="btn small ghost" type="button" id="rClear">Clear results</button></div></div>`;
   const chk=(r,i)=>{const t=r._added||isTracked(r);return `<input type="checkbox" data-ri="${i}"${r._sel&&!t?" checked":""}${t?" disabled":""} aria-label="Select ${esc(r.company)}, ${esc(r.role)}">`};
@@ -6897,13 +7199,13 @@ async function generateTracker(rows){
   if(!t.file)return `All of them are already in ${t.inUse}, so no new file was needed.`;
   await loadState();
   const dup=t.skipped?` ${t.skipped} ${t.skipped===1?"was":"were"} already there.`:"";
-  return t.inUse?`Saved ${t.file} with ${t.rows} new ${t.rows===1?"job":"jobs"}${t.copiedFrom?` added to your ${t.copiedFrom} jobs`:""}. Job Line is using it now.${dup}`
+  return t.inUse?`Saved ${t.file} with ${t.rows} new ${t.rows===1?"job":"jobs"}${t.copiedFrom?` added to your ${t.copiedFrom} jobs`:""}. Job tracker is using it now.${dup}`
     :`Saved ${t.file} in your tracker folder, but another file is still in use. Pick it in Settings, Local files.${dup}`;
 }
 const SEARCH={state:null,
   async load(){try{const r=await api("/api/search/state");SEARCH.state=r.state||{}}catch(e){SEARCH.state={}}},
   canWeb(){return findEngine()!=="auto"},
-  introText(){return findEngine()==="chat"?"Job Line writes a search prompt from your criteria and resume. Paste it into ChatGPT or Claude with web search on, then paste the reply back. Results come back in your tracker’s columns, ready to review and add.":SEARCH.canWeb()?"Search the web for current postings that fit your resume. Results come back in your tracker’s columns, ready to review and add.":"Search the job boards, then paste the postings you like. Each one comes back in your tracker’s columns, with fit, matches and gaps against your resume."},
+  introText(){return findEngine()==="chat"?"Job tracker writes a search prompt from your criteria and resume. Paste it into ChatGPT or Claude with web search on, then paste the reply back. Results come back in your tracker’s columns, ready to review and add.":SEARCH.canWeb()?"Search the web for current postings that fit your resume. Results come back in your tracker’s columns, ready to review and add.":"Search the job boards, then paste the postings you like. Each one comes back in your tracker’s columns, with fit, matches and gaps against your resume."},
   formNote(){return SEARCH.canWeb()?"Every result links to its posting so you can check it before applying.":(S.aiReady?"Searching the web needs an Anthropic or OpenAI key in Settings. Your local model can still format postings you paste.":"Set up drafting in Settings to search the web and format postings.")},
   emptyText(){return SEARCH.canWeb()?"Set your criteria and search the web, or paste a posting you found on a job board.":"Press Find jobs above, or open a job board with the links on the right and paste a posting you like under “Add a posting you found.”"},
   webText(){return SEARCH.canWeb()?"Search the web for roles that fit your resume.":"Search the boards and paste postings to add."},
@@ -6915,7 +7217,7 @@ const SEARCH={state:null,
       const r=await askChat({title:"Ask your chat to find jobs",prompt:p.prompt,restore:p.restore,web:true,useLabel:"Generate tracker"});
       const d=await api("/api/import",{kind:"search",criteria:c,text:r.text});SEARCH.hidden=d.hidden||0;
       const rows=d.rows||[];SEARCH.note="";
-      if(rows.length){                               // the reply also becomes a new tracker file in the Job Line folder
+      if(rows.length){                               // the reply also becomes a new tracker file in the Job tracker folder
         try{SEARCH.note=" "+await generateTracker(rows)}
         catch(e){SEARCH.note=" "+(e.message||"Couldn’t create the tracker file.")}
       }
@@ -6961,7 +7263,7 @@ async function copyText(t){try{await navigator.clipboard.writeText(t);toast("Cop
 const median=a=>{const s=[...a].sort((x,y)=>x-y),m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2};
 
 /* ---------- Stale-posting signals and the link check ---------- */
-const LC_TEXT={ok:"The link works",closed:"The page says it’s closed",gone:"The page is gone",blocked:"The site wouldn’t let Job Line check",error:"Couldn’t check the link"};
+const LC_TEXT={ok:"The link works",closed:"The page says it’s closed",gone:"The page is gone",blocked:"The site wouldn’t let Job tracker check",error:"Couldn’t check the link"};
 function linkHtml(j){
   const lc=j.linkCheck;
   if(!/^https?:\/\//i.test(j.source||""))return "";
@@ -6972,10 +7274,80 @@ function staleHtml(j){
   return `${g&&g.reasons.length?`<div class="stale"><b>${g.score>=2?"Worth checking first":"Small things to know"}</b><ul>${g.reasons.map(r=>`<li>${esc(r)}</li>`).join("")}</ul></div>`:""}${linkHtml(j)}`;
 }
 
+/* ---------- Closing date and careers page ----------
+   Search results keep these in Notes ("Closes 2026-10-20", "Careers page: https://..."; ai.py _fold_extras). A
+   closing date a chat or the daily task wrote in its own words ("Apply by Oct 20, 2026", "Deadline: 20 October 2026")
+   counts too. Notes are shown without the two, since the job page shows them on their own. */
+function postingExtras(j){
+  const notes=String(j.notes||"");
+  const cm=notes.match(/\bCareers page:\s*(https?:\/\/[^\s;|]+)/i);
+  const dm=notes.match(/\b(?:closes?|closing(?:\s+date)?|apply\s+by|deadline|applications?\s+close(?:s)?)\s*(?:on\s*|:\s*)?(\d{4}-\d{2}-\d{2}|[A-Z][a-z]{2,8}\.?\s+\d{1,2},?\s+\d{4}|\d{1,2}\s+[A-Z][a-z]{2,8}\.?,?\s+\d{4})/i);
+  let closes=null;
+  if(dm){
+    const iso=dm[1].match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const d=iso?new Date(+iso[1],iso[2]-1,+iso[3]):new Date(dm[1].replace(/\./g,""));
+    if(!isNaN(d))closes=d;
+  }
+  const rest=notes.replace(/;?\s*Careers page:\s*https?:\/\/[^\s;|]+/i,"").replace(/;?\s*Closes \d{4}-\d{2}-\d{2}/i,"").replace(/^[;\s]+|[;\s]+$/g,"");
+  return {careers:cm?cm[1]:"",closes,notes:rest};
+}
+function closesHtml(d){
+  const t=new Date();t.setHours(0,0,0,0);
+  const days=Math.round((d-t)/864e5),when=d.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+  if(days<0)return `<b style="color:var(--red)">Closed ${esc(when)}</b>`;
+  if(days===0)return `<b style="color:var(--red)">Closes today</b>`;
+  return `${esc(when)}<br><small class="note" style="color:${days<=7?"var(--red)":"inherit"}">${days===1?"Tomorrow":`In ${days} days`}</small>`;
+}
+
+/* ---------- Listing notes as points ----------
+   Requirements, matches and gaps come from the tracker as one paragraph. Split them into short points (lines, bullets,
+   semicolons, sentences); one point stays a paragraph. Abbreviations like "e.g." and "Inc." don't end a sentence.
+   A point that is a list ("The resume does not show A, B, C, or D") becomes its lead plus one bullet per item. It stays
+   whole when an item holds a list of its own ("such as", "including"), or when there is no lead and items are long. */
+const capFirst=x=>/^[a-z][a-z]/.test(x)?x[0].toUpperCase()+x.slice(1):x;
+const LIST_LEAD=/^(.*?\b(?:does(?:\s+not|n[’']t)\s+(?:show|mention|include|list)|not\s+(?:shown|mentioned|listed)|lacks?|missing|matches|shows|covers|has|requires?|needs?|including|includes?|such as|with))\s+(\S.*)$/i;
+function listPoint(x){
+  const segs=[];let depth=0,cur="";
+  for(let i=0;i<x.length;i++){
+    const c=x[i];
+    if(c==="("||c==="[")depth++;else if((c===")"||c==="]")&&depth)depth--;
+    if(c===","&&!depth&&x[i+1]===" "){segs.push(cur);cur="";i++;continue}
+    cur+=c;
+  }
+  segs.push(cur);
+  if(segs.length<3)return x;
+  let lead="";const m=segs[0].match(LIST_LEAD);
+  if(m){lead=m[1];segs[0]=m[2]}
+  const items=segs.map(t=>t.trim().replace(/^(?:and\/or|and|or)\s+/i,"").trim()).filter(Boolean),words=t=>t.split(/\s+/).length;
+  if(items.length<3||items.slice(1).some(t=>/\b(?:such as|including|like|e\.g)\b/i.test(t))||items.some(t=>words(t)>12)||(!lead&&items.some(t=>words(t)>6)))return x;
+  return {lead:capFirst(lead),items:items.map(capFirst)};
+}
+function notePoints(text){
+  const t=String(text||"").replace(/\r/g,"").trim();
+  if(!t)return[];
+  const parts=[];
+  t.split(/\n+|(?:^|\s)[•▪◦]\s+/).forEach(line=>{
+    line=line.replace(/^\s*(?:[-*]|\d+[.)])\s+/,"").trim();
+    line.split(/;\s+/).forEach(s=>s.split(/(?<!\b(?:e\.g|i\.e|etc|vs|Inc|Ltd|Corp|Co|Jr|Sr|St|approx|incl|min|max|yrs?))[.!?]\s+(?=[A-Z"“(])/).forEach(x=>{
+      x=x.trim().replace(/[.;,]+$/,"");
+      if(!x)return;
+      const l=listPoint(capFirst(x));
+      if(typeof l==="string"||l.lead)parts.push(l);else parts.push(...l.items);
+    }));
+  });
+  return parts;
+}
+function notesHtml(text,empty){
+  const p=notePoints(text);
+  if(!p.length||(p.length===1&&typeof p[0]==="string"))return `<p>${esc(p.length?String(text).trim():empty)}</p>`;
+  return `<ul class="pts">${p.map(x=>typeof x==="string"?`<li>${esc(x)}</li>`
+    :`<li><span class="lead">${esc(x.lead)}:</span><ul class="sub">${x.items.map(i=>`<li>${esc(i)}</li>`).join("")}</ul></li>`).join("")}</ul>`;
+}
+
 /* ---------- Skills match ---------- */
 function skillsSec(j){
   const k=j.skills,h=`<h3><span class="k" style="background:var(--blue)"></span>How you match</h3>`;
-  if(!k||k.score==null)return `<div class="sec">${h}<p class="note">${S.resume.ok?"The listing doesn’t name skills that Job Line recognises, so there’s nothing to score.":"Add your resume to see how it covers the skills this listing asks for."}</p></div>`;
+  if(!k||k.score==null)return `<div class="sec">${h}<p class="note">${S.resume.ok?"The listing doesn’t name skills that Job tracker recognises, so there’s nothing to score.":"Add your resume to see how it covers the skills this listing asks for."}</p></div>`;
   const col=k.score>=70?"var(--green)":k.score>=40?"var(--amber)":"var(--red)";
   return `<div class="sec">${h}
     <div class="mrow"><div class="mscore" style="--c:${col}"><b>${k.score}%</b><span>${k.matched.length} of ${k.total} skills</span></div>
@@ -7154,49 +7526,109 @@ async function downloadCalendar(id){
   }catch(e){toast(e.message)}
 }
 
+/* ---------- Interview prep, the section: every job worth preparing for, by how soon it matters ----------
+   Calls and interviews first, then applied and waiting, then (folded away) the ones still to apply to. Each opens the
+   prep guide on its company page. Whether a guide is built comes from /api/prep/get, asked once per job and only for
+   the first two groups. */
+function renderInterviews(){
+  const el=$("interviews");if(!el||VIEW!=="interviews")return;
+  const jobs=jobList(),by=k=>jobs.filter(j=>k.includes(stageOf(j.id))).sort((a,b)=>a.company.localeCompare(b.company));
+  const groups=[
+    {t:"Calls and interviews",d:"Prepare for these first.",list:by(["screen","interview"]),hot:true},
+    {t:"Applied, waiting to hear",d:"Get a head start before they call.",list:by(["applied"])},
+    {t:"Still to apply",d:"Prep can help you decide, too.",list:by(["queue"]),fold:true},
+  ];
+  const card=(j,hot)=>{const p=PREP[j.id],st=progOf(j.id).status;
+    return `<li class="ivrow"><div class="ivmain"><span class="ivco">${esc(cleanCompany(j.company))}</span><b>${esc(j.role)}</b>
+      <span class="ivmeta"><span class="ivst${hot?" hot":""}">${esc(st)}</span>${p?`<span class="ivok">${icon("check")}Guide ready</span>`:p===null?`<span class="note">No guide yet</span>`:""}</span></div>
+      <button class="btn ${hot?"amber":""}" type="button" data-prep="${esc(j.id)}">${icon("mic")}${p?"Open prep":"Start prep"}</button></li>`};
+  const sec=g=>{if(!g.list.length&&g.fold)return "";
+    const body=g.list.length?`<ul class="ivlist">${g.list.map(j=>card(j,g.hot)).join("")}</ul>`:`<p class="note" style="margin:0">Nothing here yet.</p>`;
+    const head=`<h3>${esc(g.t)} <span class="ivn">${g.list.length}</span></h3><p class="note">${esc(g.d)}</p>`;
+    return g.fold?`<details class="panel ivgroup"><summary>${head}</summary>${body}</details>`:`<section class="panel ivgroup${g.hot?" hot":""}">${head}${body}</section>`};
+  const build=isManual()
+    ?"Job tracker writes one prompt for both the company briefing and the interview guide, with the job and your resume (your name and contact details are swapped for placeholders). Copy it into a free ChatGPT or Claude chat, then paste the whole reply back. Both sections fill in, with your details put back."
+    :"Job tracker asks your AI for a company briefing, then your interview questions, from the job and your resume. It takes a minute or two.";
+  const how=`<section class="panel ivhow" aria-label="How interview prep works"><h3>How it works</h3><ol>
+    <li><span class="hnum" aria-hidden="true">1</span><div><b>Pick an application</b><span>Click <b>Start prep</b> on a job below. Or open a job in Applications and click <b>Interview prep</b>.</span></div></li>
+    <li><span class="hnum" aria-hidden="true">2</span><div><b>Click Build prep</b><span>${esc(build)} You get two tabs: Company and role, and Interview questions.</span></div></li>
+    <li><span class="hnum" aria-hidden="true">3</span><div><b>Practise</b><span>Read your pitch and the stories from your resume, then answer the likely questions in practice mode and get feedback on each answer.</span></div></li>
+  </ol></section>`;
+  el.innerHTML=`<div class="vhead"><h2>Interview prep</h2><p>A guide for each interview: your pitch, the questions you’ll likely get with a practice mode, stories from your resume, topics to review and questions to ask.</p></div>`+how
+    +(jobs.length?groups.map(sec).join(""):`<div class="empty-brief"><h3>No jobs yet</h3><p class="note" style="margin:0">Add jobs in Find jobs, then come back here to prepare for the interviews.</p></div>`);
+  el.querySelectorAll("[data-prep]").forEach(b=>b.onclick=()=>{const id=b.dataset.prep;S.sel=id;renderList();renderDetail();openCompany(id,"prep")});
+  const want=groups[0].list.concat(groups[1].list).filter(j=>PREP[j.id]===undefined).slice(0,40);
+  if(want.length)Promise.all(want.map(j=>api("/api/prep/get",{id:j.id}).then(r=>{PREP[j.id]=r.prep||null},()=>{PREP[j.id]=null}))).then(()=>{if(VIEW==="interviews")renderInterviews()});
+}
+
 /* ---------- Interview prep (on the company page) ---------- */
 const PREP={};
+/* Interview questions, the second subtab of the company page. It has no button of its own: Build prep in the header
+   makes the briefing and these together. Each section has its own colour and icon. */
+const PREP_META=[
+  [/questions to ask|ask them/i,{c:"var(--blue)",ic:"question",note:"Ask two or three near the end."}],
+  [/pitch/i,{c:"var(--amber)",ic:"mic",note:"Say it out loud until it sounds like you."}],
+  [/likely to ask|questions they/i,{c:"var(--blue)",ic:"chat",note:"Click Practise to answer one and get feedback."}],
+  [/stories/i,{c:"var(--green)",ic:"star",note:"Situation, what you did, the result."}],
+  [/technical|topics/i,{c:"var(--amber)",ic:"code",note:""}],
+  [/gaps/i,{c:"var(--red)",ic:"alert",note:"Honest, short, and pointing to how you’d close it."}],
+];
+function prepCount(id){const r=PREP[id];if(!r)return 0;const q=parseBrief(r.text).find(x=>/likely to ask|questions they/i.test(x.title));return q?q.items.length:0}
+function prepMeta(r,id){
+  const p=PREP[id];
+  if(r.text||p)return [r.text?RESEARCH.metaText(r):"",p?`Interview questions built ${p.at||""}.`:""].join(" ").trim();
+  return "Builds both tabs at once: the company briefing and your interview questions. "+RESEARCH.metaText(r);
+}
 function prepSecHtml(id){
   const r=PREP[id];
-  return `<section class="panel prep" id="prepSec"><header class="prephead"><div><h3>Interview prep</h3><p class="note" style="margin:2px 0 0">${r?`Built ${esc(r.at||"")}. Practise the questions and get feedback on your answers.`:"A guide for the interview: your pitch, the questions you’ll likely get with a practice mode, stories from your resume, topics to review and questions to ask."}</p></div><div class="row2"><button class="btn ${r?"":"primary"}" type="button" id="prepGo">${r?"Rebuild the guide":"Build the guide"}</button></div></header><div id="prepOut" class="prepout">${r?renderPrep(r.text):""}</div></section>`;
+  if(r===undefined)return `<section class="prep" id="prepSec">${skeleton("Loading…")}</section>`;
+  if(!r)return `<section class="prep" id="prepSec"><div class="empty-brief"><h3>Your interview questions</h3><p class="note" style="margin:0 auto 14px;max-width:62ch">The questions you’ll likely get, with a practice mode that gives feedback on your answers. Plus your 60-second pitch, stories from your resume, topics to review, how to talk about gaps, and questions to ask them.</p><p class="note" style="margin:0"><b>Click Build prep at the top</b> to make this tab and Company and role together.</p></div></section>`;
+  return `<section class="prep" id="prepSec"><div id="prepOut" class="prepout">${renderPrep(r.text)}</div></section>`;
+}
+/* A story ends with the questions it answers, "(answers 2, 5)", sometimes after a stray " | ". Show that as a small
+   note that says what the numbers are. */
+function storyMd(x){
+  const m=String(x).match(/\s*\|?\s*\(answers?\s+((?:Q?\d+(?:\s*(?:,|and|&)\s*)?)+)\)\s*\.?\s*$/i);
+  if(!m)return inlineMd(x);
+  const n=m[1].match(/\d+/g),list=n.length>1?n.slice(0,-1).join(", ")+" and "+n[n.length-1]:n[0];
+  return `${inlineMd(x.slice(0,m.index))}<small class="pans">Good for question${n.length>1?"s":""} ${list}</small>`;
 }
 function renderPrep(text){
   return parseBrief(text).map(s=>{
-    const isQ=/likely to ask/i.test(s.title);
+    const m=(PREP_META.find(([re])=>re.test(s.title))||[null,{c:"var(--ink)",ic:"book",note:""}])[1];
+    const isQ=/likely to ask|questions they/i.test(s.title);
     const paras=s.paras.map(p=>`<p>${inlineMd(p)}</p>`).join("");
     let items="";
     if(s.items.length)items=isQ
-      ?`<ol class="pq">${s.items.map((x,k)=>{const parts=String(x).split(/\s+\|\s+/),q=parts[0],hint=parts.slice(1).join(" ");return `<li data-q="${esc(plain(q))}"><div class="pqrow"><span>${inlineMd(q)}${hint?`<small>${esc(hint)}</small>`:""}</span><button class="btn small" type="button" data-practice="${k}">Practise</button></div><div class="pbox hidden"></div></li>`}).join("")}</ol>`
-      :`<ul class="bul">${s.items.map(x=>`<li>${inlineMd(x)}</li>`).join("")}</ul>`;
-    return `<div class="pcard"><h4>${esc(s.title||"Guide")}</h4>${paras}${items}</div>`;
+      ?`<ol class="pq">${s.items.map((x,k)=>{const parts=String(x).split(/\s+\|\s+/),q=parts[0],hint=parts.slice(1).join(" ");return `<li data-q="${esc(plain(q))}"><div class="pqrow"><span class="pqn" aria-hidden="true">${k+1}</span><span class="pqt">${inlineMd(q)}${hint?`<small>${esc(hint)}</small>`:""}</span><button class="btn small" type="button" data-practice="${k}">Practise</button></div><div class="pbox hidden"></div></li>`}).join("")}</ol>`
+      :`<ul class="bul">${s.items.map(x=>`<li>${storyMd(x)}</li>`).join("")}</ul>`;
+    return `<div class="pcard" style="--k:${m.c}"><h4><span class="pkic" aria-hidden="true">${icon(m.ic)}</span>${esc(s.title||"Guide")}</h4>${m.note?`<p class="pknote">${esc(m.note)}</p>`:""}${paras}${items}</div>`;
   }).join("");
+}
+/* Free chat mode: the company briefing and the interview guide come from one prompt (kind "both"), so one copy and
+   paste fills both sections. Either button on the company page runs it. */
+async function askBoth(id){
+  const j=S.jobs[id]||{},p=await api("/api/prompt",{kind:"both",id});
+  const a=await askChat({title:"Ask your chat for a briefing and an interview guide on "+cleanCompany(j.company||"this company"),prompt:p.prompt,restore:p.restore,promptAlt:p.promptNoWeb,altLabel:"My chat can search the web",web:true});
+  const d=await api("/api/import",{kind:"both",id,text:a.text,web:a.web});
+  S.research[id]=d.research;PREP[id]=d.prep;
+  return d;
 }
 async function setupPrep(id){
   if(PREP[id]===undefined){
     try{PREP[id]=(await api("/api/prep/get",{id})).prep||null}catch(e){PREP[id]=null}
-    if(S.companyId===id&&$("prepSec"))$("prepSec").outerHTML=prepSecHtml(id);
+    if(S.companyId===id){renderCompany();return}
   }
   if(S.companyId===id)bindPrep(id);
 }
 function bindPrep(id){
-  const go=$("prepGo");if(!go)return;
-  go.onclick=async()=>{
-    if(!S.resume.ok){toast(S.resume.error||"Add your resume first.");return}
-    if(!S.aiReady){openSettings();return}
-    go.disabled=true;const out=$("prepOut");S.drafting++;
-    out.innerHTML=skeleton(isManual()?"Waiting for your chat’s reply…":"Writing the guide. This takes about a minute.");
-    try{
-      let r;
-      if(isManual()){
-        const p=await api("/api/prompt",{kind:"prep",id});
-        const a=await askChat({title:"Ask your chat for an interview guide",prompt:p.prompt,restore:p.restore});
-        r=await api("/api/import",{kind:"prep",id,text:a.text});
-      }else r=await api("/api/prep",{id});
-      PREP[id]=r.prep;
-    }catch(e){if(e.name!=="AbortError")toast(e.message||"The guide didn’t finish.")}
-    finally{S.drafting--;if(S.companyId===id&&$("prepSec")){$("prepSec").outerHTML=prepSecHtml(id);bindPrep(id)}}
-  };
-  $("prepOut").querySelectorAll("[data-practice]").forEach(b=>b.onclick=()=>openPractice(id,b.closest("li")));
+  if($("prepOut"))$("prepOut").querySelectorAll("[data-practice]").forEach(b=>b.onclick=()=>openPractice(id,b.closest("li")));
+}
+/* The two subtabs of the company page (arrow keys move between them, as in any tab list) */
+function bindCvTabs(){
+  const tabs=[...document.querySelectorAll(".cvtabs [role=tab]")];
+  const pick=(t,focus)=>{S.cvTab=t.dataset.tab;tabs.forEach(x=>{const on=x===t;x.setAttribute("aria-selected",String(on));x.tabIndex=on?0:-1;$(x.getAttribute("aria-controls")).hidden=!on});if(focus)t.focus()};
+  tabs.forEach((t,i)=>{t.onclick=()=>pick(t);t.onkeydown=e=>{const d=e.key==="ArrowRight"?1:e.key==="ArrowLeft"?-1:0;if(d){e.preventDefault();pick(tabs[(i+d+tabs.length)%tabs.length],true)}}});
 }
 function inlineMdBlock(t){return String(t).split(/\n+/).filter(l=>l.trim()).map(l=>/^\s*[-*•]\s+/.test(l)?`<p class="fb">• ${inlineMd(l.replace(/^\s*[-*•]\s+/,""))}</p>`:`<p>${inlineMd(l)}</p>`).join("")}
 function openPractice(id,li){
@@ -7355,7 +7787,7 @@ function apiProvider(){
 function engineToggle(engine){
   const nm={anthropic:"Anthropic",openai:"OpenAI"}[apiProvider()];
   const note={auto:"Reads the career pages and job service you set up. Fast, and it costs nothing.",
-    chat:"Job Line writes a search prompt for ChatGPT or Claude. Paste it into a chat with web search on, then paste the reply back here.",
+    chat:"Job tracker writes a search prompt for ChatGPT or Claude. Paste it into a chat with web search on, then paste the reply back here.",
     api:`Searches the web with your ${nm} API key. It takes 1 to 3 minutes and uses your API credits.`}[engine];
   const own=(engine==="chat"&&!isManual())||(engine==="api"&&!(webCapable()&&S.settings.ai.provider===apiProvider()));
   return `<div class="enginebar"><div class="seg2 seg3" role="group" aria-label="How to search">
@@ -7388,7 +7820,7 @@ function autoHtml(){
     <p class="note" id="autoOut" style="margin:10px 0 0">${ready?esc(lastTxt):"Add a few companies or an Adzuna key under Set up sources, then press Find jobs."}</p>
     <details id="autoSetup"${ready?"":" open"}><summary>Set up sources</summary><div class="asetup">
       <h4>Company career pages</h4>
-      <p class="note" style="margin:0 0 8px">Paste a company’s jobs link. It works for pages run on Greenhouse, Lever or Ashby, for example jobs.lever.co/companyname. You can also paste the company’s own careers page and Job Line will look for one of them.</p>
+      <p class="note" style="margin:0 0 8px">Paste a company’s jobs link. It works for pages run on Greenhouse, Lever or Ashby, for example jobs.lever.co/companyname. You can also paste the company’s own careers page and Job tracker will look for one of them.</p>
       <div class="row2"><input id="coIn" placeholder="Paste a jobs link" aria-label="Company jobs link"><input id="coName" placeholder="Name (optional)" aria-label="Company name" style="max-width:190px"><button class="btn small primary" type="button" id="coAdd">Add company</button></div>
       <p class="note" id="coMsg" style="margin:6px 0 0"></p>
       <ul class="colist">${f.watchlist.map(w=>`<li><span><b>${esc(w.name)}</b> <span class="note">${esc(ATS_LABEL[w.ats]||w.ats)}${w.count!=null?`, ${w.count} jobs when added`:""}</span></span><button class="btn small ghost" type="button" data-rmco="${esc(w.id)}" aria-label="Remove ${esc(w.name)}">Remove</button></li>`).join("")||`<li class="note">No companies yet.</li>`}</ul>
@@ -7476,7 +7908,7 @@ function renderFiles(){
         t.ok?open("trackerFile","Open tracker"):`<button class="btn small primary" type="button" data-act="create-tracker">Create a new tracker</button>`)+trackerChooser(t)+
     row("Tracker folder","Your tracker and the automatic backups made before every change.",f.tracker,open("tracker","Open folder"))+
     row("Applications folder","One folder per job: tailored resumes, cover letters, research and interview prep.",f.applications,open("applications","Open folder"))+
-    row("Resume folder","Your resume files. Job Line never changes them.",f.resume,open("resume","Open folder"));
+    row("Resume folder","Your resume files. Job tracker never changes them.",f.resume,open("resume","Open folder"));
   el.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>openPath({what:b.dataset.open}));
   el.querySelectorAll("input[name=trkpick]").forEach(r=>r.onchange=async()=>{
     try{await api("/api/settings",{tracker_file:r.value});await loadState();renderFiles();toast(r.value?`Now using ${r.value}.`:"Choosing the tracker automatically again.")}
@@ -7497,7 +7929,7 @@ function trackerChooser(t){
   const files=t.files||[];
   if(files.length<2&&!t.pinned)return "";
   const row=f=>`<label class="trow${f.valid?"":" off"}"><input type="radio" name="trkpick" value="${esc(f.file)}"${t.pinned&&t.pinned.toLowerCase()===f.file.toLowerCase()?" checked":""}${f.valid?"":" disabled"}><span><b>${esc(f.file)}</b>${f.inUse?` <span class="achip ak-quick">In use</span>`:""}<span class="note">Modified ${esc(fmtWhen(f.mtime))}${f.nameDate?`. Date in the name: ${esc(f.nameDate)}`:""}${f.valid?"":". It doesn’t look like a job tracker, so it’s ignored"}</span></span></label>`;
-  return `<div class="trkpick"><p class="note" style="margin:0 0 6px">${files.length} spreadsheets are in the tracker folder. Job Line uses the one with the newest date in its name, or the most recently modified one when the names have no dates. Pick a file to always use it instead.</p>
+  return `<div class="trkpick"><p class="note" style="margin:0 0 6px">${files.length} spreadsheets are in the tracker folder. Job tracker uses the one with the newest date in its name, or the most recently modified one when the names have no dates. Pick a file to always use it instead.</p>
     <label class="trow"><input type="radio" name="trkpick" value=""${t.pinned?"":" checked"}><span><b>Automatic</b><span class="note">Newest date in the name, otherwise most recently modified</span></span></label>${files.map(row).join("")}</div>`;
 }
 
@@ -7515,7 +7947,7 @@ function renderPrompts(){
     <div class="row2"><button class="btn small primary" type="button" data-copyprompt="${esc(p.id)}">Copy prompt</button><span class="note" data-copied="${esc(p.id)}"></span></div></details>`).join("")
     +(d.hasResume||!$("pmResume").checked?"":`<p class="note" style="margin:6px 0 0">Your resume isn’t uploaded yet, so the prompts that compare jobs with it have a spot for you to paste it.</p>`);
   const pv=$("pmPriv");
-  if(pv)pv.textContent=d.hasResume&&$("pmResume").checked?"Before your resume goes into a prompt, Job Line replaces your name, contact details, addresses, ID numbers and links with placeholders such as [NAME] and [EMAIL]."+(d.removed?` Taken out of yours: ${d.removed}.`:""):"";
+  if(pv)pv.textContent=d.hasResume&&$("pmResume").checked?"Before your resume goes into a prompt, Job tracker replaces your name, contact details, addresses, ID numbers and links with placeholders such as [NAME] and [EMAIL]."+(d.removed?` Taken out of yours: ${d.removed}.`:""):"";
   box.querySelectorAll("[data-copyprompt]").forEach(b=>b.onclick=async()=>{
     const p=d.prompts.find(x=>x.id===b.dataset.copyprompt),msg=box.querySelector(`[data-copied="${p.id}"]`);
     try{await navigator.clipboard.writeText(p.prompt);msg.textContent="Copied. Paste it into your chat."}
