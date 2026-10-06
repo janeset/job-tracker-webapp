@@ -1455,7 +1455,7 @@ input[type=checkbox],input[type=radio]{accent-color:var(--accent)}
 .filters{padding:14px var(--pad);gap:10px;border-bottom:1px solid var(--line)}
 .seg,.seg2{display:inline-flex;flex-wrap:wrap;gap:0;background:var(--surface-2);border:0;border-radius:var(--radius-sm);padding:3px}
 .seg label,#setForm .seg label{border:0!important;background:none!important;border-radius:7px;padding:6px 12px!important;color:var(--muted)!important;font-size:.85rem!important;box-shadow:none}
-.seg label:has(input:checked){background:var(--surface)!important;color:var(--text)!important;box-shadow:var(--shadow),0 0 0 1px var(--line)}
+.seg label:has(input:checked),#setForm .seg label:has(input:checked){background:var(--surface)!important;color:var(--text)!important;font-weight:600;box-shadow:var(--shadow),0 0 0 1px var(--line)}
 .seg label input{position:absolute;opacity:0;pointer-events:none}
 .seg2 button{border:0;background:none;border-radius:7px;padding:5px 12px;color:var(--muted);font-size:.85rem}
 .seg2 button[aria-current="true"]{background:var(--surface);color:var(--text);box-shadow:var(--shadow),0 0 0 1px var(--line)}
@@ -1771,6 +1771,20 @@ body::after{inset:0;background-image:radial-gradient(var(--amb-dots) 1px,transpa
 /* buttons, tabs and the in-use row can't be text-selected, so clicking them quickly (Show, Hide, a tab) doesn't
    highlight the text around them; ordinary text stays selectable */
 button,.btn,.views button,.inuse-item,.slbar-toggle{-webkit-user-select:none;user-select:none}
+
+/* How to use, side panel: it sticks just under the header (07-ui.js measures it into --topbar-h); one tidy row of
+   tools: just Compact; compact shows the arrow only */
+.gpanel{top:calc(var(--topbar-h,110px) + 14px);max-height:calc(100vh - var(--topbar-h,110px) - 28px)}
+.guide,.gsec{scroll-margin-top:calc(var(--topbar-h,110px) + 14px)}
+.gtools{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;padding:2px 0 10px}
+.gtool{display:inline-flex;align-items:center;gap:4px;height:28px;padding:0 8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--muted);
+  font:500 .75rem/1 var(--font);border-radius:7px;cursor:pointer;white-space:nowrap;-webkit-user-select:none;user-select:none}
+.gtool:hover{color:var(--text);background:var(--hover)}
+.gtool:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.gcompact .garrow{display:inline-block;transition:transform .2s}
+.guide.compact .gtools{justify-content:center}
+.guide.compact .gcompact .glabel{display:none}
+.guide.compact .gcompact .garrow{transform:rotate(180deg)}
 </style>
 </head>
 <body data-view="home">
@@ -4010,6 +4024,108 @@ async function filesIn(folder) {
 }
 function delFileUrl(rel) { if (fileUrls[rel]) { URL.revokeObjectURL(fileUrls[rel]); delete fileUrls[rel]; } }
 
+/* ---------- How to use: this edition's own guide ----------
+The desktop guide (engine/guide.py, adapted by GUIDE_EDITS into window.JL_GUIDE) describes the desktop app. This page
+has its own tabs, wording and AI modes, so /api/guide serves the sections below instead. Same shape as guide.py:
+id, title, intro, numbered steps; **bold** only. No screenshots yet: the ones in guide/ show the desktop look. */
+const STATIC_GUIDE = [
+  { id: "start", title: "Start Job Line",
+    intro: "Job Line is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.",
+    steps: [
+      { text: "Open the **jobline-static** folder and double-click **index.html**. It opens in your browser. **Chrome** and **Edge** work best: they can save your files straight into a folder on your computer." },
+      { text: "Bookmark the page and use the same browser each time. Your resume, job tracker file and documents are kept in that browser, so another browser starts empty." },
+      { text: "On a fresh start, **Home** shows three steps: **upload your resume**, **search for jobs** to create your job tracker file, then **see your applications**. Each step gets a tick when it's done." },
+      { text: "Under the tabs, **Resume** and **Job tracker file** show what's in use, with a green dot. Click either one to change it." },
+    ] },
+  { id: "mode", title: "Choose how Job Line uses AI",
+    intro: "Job Line writes tailored resumes and cover letters, researches companies and finds jobs with an AI. This page has two ways to use one. You can switch any time without losing anything.",
+    steps: [
+      { text: "Open **Settings** (the last tab, on the right). On the **General** tab, find **Drafting with** and pick a mode. The badge at the top right always shows the mode in use; click it to come back here." },
+      { text: "**Free chat (copy and paste)** uses a free ChatGPT or Claude account in another tab. No key, no cost, and it can search the web for jobs. The next section shows how it works." },
+      { text: "**Local model** uses an AI running on your own computer (Ollama or LM Studio) through its API. Job Line talks to it directly, so drafts appear without copying anything, and nothing leaves your computer. It can't search the web. See **Local model** below to set it up." },
+      { text: "Not sure? Start with **Free chat**. Finding jobs always uses the chat prompts on this page, whichever mode you pick for drafting." },
+      { text: "Paid API keys for Claude or ChatGPT are only in the desktop version of Job Line." },
+    ] },
+  { id: "freechat", title: "Free chat: copy and paste",
+    intro: "In free chat mode Job Line writes the prompt, your chat does the thinking, and Job Line turns the reply into files. It works for resumes, cover letters, company research, interview prep and finding jobs.",
+    steps: [
+      { text: "In **Settings**, **General**, choose **Free chat (copy and paste)** and click **Save settings**." },
+      { text: "When you ask for something (for example **Craft resume** on a job, or **Write the search prompt** in Find jobs), the **Ask your chat** window opens with the prompt ready." },
+      { text: "Click **Copy prompt**, then open a new chat at chatgpt.com or claude.ai (the links are in the window). Paste the prompt and send it. For finding jobs, turn on the chat's **web search**." },
+      { text: "When the chat has finished, copy its **whole reply**, paste it into **The chat's reply** and click **Use this reply**. Job Line does the rest: the resume or letter, the Word and PDF files, or the job results." },
+      { text: "Your privacy: before your resume goes into a prompt, your name, email, phone, address and links are replaced with placeholders such as [NAME] and [EMAIL]. Job Line puts them back when you paste the reply." },
+      { text: "**Settings**, **Prompts** has more ready-made prompts to copy: create a job tracker file, find jobs and update it, add one posting, and check which listings are still open." },
+    ] },
+  { id: "local", title: "Local model: an AI on your computer",
+    intro: "A local model is a free AI that runs on your own computer. Job Line sends it requests through its API (the same kind ChatGPT uses), so drafts come back by themselves and nothing is sent over the internet.",
+    steps: [
+      { text: "Install **Ollama** (ollama.com) or **LM Studio** (lmstudio.ai) and download a model. With Ollama, run **ollama pull llama3.1:8b** in a terminal. A computer with 16 GB of memory or more works best." },
+      { text: "Let this page talk to it. **Ollama**: set the environment variable **OLLAMA_ORIGINS** to an asterisk (the * character) and restart Ollama. **LM Studio**: start the server in the Developer tab and switch on **Enable CORS**. Without this the browser blocks the connection. README.txt next to this page has the details." },
+      { text: "In **Settings**, **General**, choose **Local model**. Fill in **Server address** (Ollama: http://localhost:11434/v1, LM Studio: http://localhost:1234/v1) and **Model** (the name you downloaded, for example llama3.1:8b). Leave **API key** blank unless your server asks for one." },
+      { text: "Click **Test connection**. When it says it worked, click **Save settings**. The badge at the top right now says **Local model**." },
+      { text: "Now **Craft resume**, **Draft cover letter**, research and interview prep write straight into Job Line. A local model can't search the web, so for **Find jobs** keep using the chat prompts, and company research comes from what the model already knows." },
+      { text: "If a draft stops or is slow, try a smaller model, or switch back to **Free chat** for that task." },
+    ] },
+  { id: "resume", title: "Add your resume",
+    intro: "Everything Job Line writes for you is built from your own resume. It never invents experience you don't have.",
+    steps: [
+      { text: "Open the **Resume** tab and click **Add resume**, or use **Upload resume** in the first step on Home. A Word file (.docx) works best; a text-based PDF, .txt or .md also works. Home then greets you by your first name." },
+      { text: "The card at the top shows the resume in use, with its words, sections and the skills Job Line recognises. Your original file is never changed." },
+      { text: "Have more than one resume? Add each one, then pick from the **Resume** dropdown. **Automatic** uses a Word file first, then the newest. You can still choose a different resume on a single job." },
+      { text: "Further down, **Custom resumes** and **Cover letters** list everything you've saved for applications, newest first. **PDF** opens one, **Word** downloads it. Files are named after your resume and the job, for example Jane_Doe_Resume - Software Developer - Contoso." },
+      { text: "**How it covers your listings** shows how well your resume matches the skills your listings ask for, and which skills come up that your resume doesn't mention. Add them only if you really have them." },
+    ] },
+  { id: "tracker", title: "Get your job tracker file",
+    intro: "Your job tracker file is an Excel file with every job you're considering and where each application stands. Job Line keeps it up to date, and you can open it in Excel any time.",
+    steps: [
+      { text: "Open **Find jobs**. The card at the top says how to get one. **Search for jobs**: the results become your job tracker file. **Add job tracker file**: use one you already have, like Job_Search_Tracker.xlsx. Or start an empty one and fill it in yourself." },
+      { text: "Once you have one, the card shows its name, how many listings it has, when it last changed and where it's saved, with **Add job tracker file** and **Download**." },
+      { text: "Several job tracker files? Pick one from the dropdown on the card, or click **Job tracker file** under the tabs. **Automatic** uses the one you opened, created or changed most recently." },
+      { text: "Opening it in Excel? Close it again before you make changes in Job Line, so both don't change the file at once." },
+    ] },
+  { id: "find", title: "Find jobs",
+    intro: "Job Line writes a search prompt from what you're looking for and your resume. Your free ChatGPT or Claude chat searches the web, and the results come back in your job tracker file's columns.",
+    steps: [
+      { text: "Fill in **What you're looking for**. Leave **Roles or keywords** empty for roles that fit your resume. Leave **Near** empty to search around the city on your resume; type a city to search there instead. Then choose how far, work model, how recent and how many results." },
+      { text: "Click **Write the search prompt**, copy it into a chat with **web search** on, and paste the whole reply back (see **Free chat** above)." },
+      { text: "Results show the fit with your resume, what they ask for and any gaps. Tick the ones you like and click **Create my job tracker file with these** (or **Add to job tracker file** once you have one). **Generate job tracker file** saves a new file with them instead." },
+      { text: "A green note on the card then says your listings are ready: click **Go to Applications** to see them." },
+      { text: "**Search the job boards** opens Indeed, LinkedIn and others with your search filled in. Found a job yourself? Paste it under **Add a posting you found** and Job Line fills in the columns for you." },
+    ] },
+  { id: "apply", title: "Apply",
+    intro: "**Applications** lists every job in your job tracker file, best to apply for first, with where each one stands.",
+    steps: [
+      { text: "Click a job to see what they ask for, where your resume matches and the gaps to cover." },
+      { text: "**Craft resume** and **Draft cover letter** write versions tailored to this job, using only what's on your resume. Read them, edit anything, then **Save Word and PDF**. They appear on the Resume tab under Custom resumes and Cover letters." },
+      { text: "**Research the company** gives a briefing on what they do, what it's like to work there, the interview process and questions to ask. Interview prep and a pay estimate are there too." },
+      { text: "After applying, click **Mark as applied today**. Keep the status, next step and follow-up date up to date, and Home reminds you when a follow-up is due." },
+    ] },
+  { id: "files", title: "Where your files are kept",
+    intro: "Everything is kept in this browser. Chrome and Edge can also save your files into a folder on your computer.",
+    steps: [
+      { text: "On the **Resume** tab, click **Choose folder** and pick a folder, for example Documents\\Job Line. Job Line makes three folders in it: **Job tracker files**, **Custom resumes** and **Cover letters**, and copies what you already have." },
+      { text: "From then on your job tracker file is saved there as you work, and every resume and cover letter you save goes there as a Word file and a PDF. The browser asks for permission again on a later visit." },
+      { text: "Without a folder, a bar under the tabs says when your job tracker file has changes that aren't on your computer yet, with **Save as a file** and **Download**. **Hide** folds it to one line; **Show** opens it again." },
+      { text: "**Settings**, **Local files** lists your job tracker files, documents, custom resumes and cover letters. **Back up everything** downloads one file you can restore later; do it now and then, because clearing your browser's data also clears Job Line." },
+    ] },
+  { id: "settings", title: "Make it yours",
+    intro: "Settings is the last tab, on the right. It has four parts: General, Appearance, Local files and Prompts.",
+    steps: [
+      { text: "The sun and moon button at the top right switches between light and dark. **Appearance** also has the accent colour, text size and **reduce motion**, which stills the moving background." },
+      { text: "**General** has the AI mode, your resume, hidden companies (their listings are left out everywhere), extra details about you for drafts, and how many days to wait before a follow-up." },
+      { text: "**Prompts** has ready-made prompts for free ChatGPT and Claude. **Local files** has your files and backups." },
+    ] },
+  { id: "help", title: "If something isn't right",
+    intro: "",
+    steps: [
+      { text: "**Couldn't save into the file**: the job tracker file may be open in Excel. Close it there, then click **Save** in the bar under the tabs." },
+      { text: "**The local model doesn't connect**: check it's running, the address and model name in Settings, and that CORS is on (OLLAMA_ORIGINS for Ollama, Enable CORS in LM Studio). Then click **Test connection** again." },
+      { text: "**A pasted reply wasn't understood**: copy the chat's whole reply, not just part of it, and paste it again. For job searches, make sure web search was on." },
+      { text: "**Something went wrong with the job tracker file**: Job Line keeps a copy before every change. Settings, Local files, **Job tracker file folder** lists the backups to download." },
+      { text: "**Everything is gone**: you may be in another browser, a private window, or your browser's data was cleared. Use the same browser, and restore a backup from Settings, Local files." },
+    ] },
+];
+
 /* ---------- service.py: every /api/ address the page uses ---------- */
 const CLOSED_STATUSES = new Set(["Rejected", "Withdrawn", "Accepted", "No Response"]);
 const INTERVIEW_STATUSES = new Set(["Phone Screen", "Interview Scheduled", "Interviewing"]);
@@ -4633,7 +4749,8 @@ async function apiTestAi() {
 }
 
 /* ---------- the How to use guide (content built in from engine/guide.py, adapted for this edition) ---------- */
-async function apiGuide() { return window.JL_GUIDE || { sections: [], images: [] }; }
+// this edition's own guide and screenshots (05c-guide.js; the images are copied from static_page/guide by the build)
+async function apiGuide() { return { sections: STATIC_GUIDE, images: STATIC_GUIDE.flatMap(s => s.steps.map(st => st.img)).filter(Boolean) }; }
 
 const notHere = what => async () => { throw new ApiError(what + " " + NEEDS_DESKTOP, 501); };
 const ROUTES = {
@@ -5036,6 +5153,8 @@ function setupLook() {
   }
   const guideBtn = $("guideBtn");
   if (guideBtn && !guideBtn.dataset.renamed) { guideBtn.dataset.renamed = "1"; guideBtn.textContent = "How to use"; }
+  const bar = document.querySelector(".topbar");
+  if (bar && window.ResizeObserver) new ResizeObserver(() => document.documentElement.style.setProperty("--topbar-h", bar.offsetHeight + "px")).observe(bar);
   const guide = $("guide");
   if (guide) new MutationObserver(() => buildGuidePanel(guide)).observe(guide, { childList: true });
   // The banner under the header: "no resume yet" and "no job tracker file yet" aren't shown there, the Home steps and the
@@ -5186,8 +5305,9 @@ function setupWording() {
 /* The glow (prephub.css, .slglow): a soft light under the pointer and a lit edge nearest it. Two overlays, one for the
    card or panel under the pointer and one for the button, sit exactly over the element and never take clicks, so no
    element's own styles change. Off on touch screens. Inside an open dialog they go into the dialog (its top layer). */
-const GLOW_CARD = ".panel,.card,.side-card,.rcard,.door,.hpanel,.chart,.station,.sform,.sec,.pcard,.pcard2,.empty-brief,.hero,.intro,.vhead,.frow,.hitem,.trow,.tile,.gsec";
-const GLOW_BTN = ".btn,.views button,.inuse-item,.gitem,.theme,.linkbtn";
+const GLOW_CARD = ".panel,.card,.side-card,.rcard,.door,.hpanel,.chart,.station,.sform,.sec,.pcard,.pcard2,.empty-brief,.hero,.intro,.vhead,.frow,.hitem,.trow,.tile";
+const GLOW_BTN = ".btn,.views button,.inuse-item,.theme,.linkbtn";
+const NO_GLOW = "#guide";   // the How to use page reads better without it
 function setupGlow() {
   if (!matchMedia("(hover: hover) and (pointer: fine)").matches || $("slGlowCard")) return;
   const make = (id, kind) => { const d = document.createElement("div"); d.id = id; d.className = "slglow " + kind; d.setAttribute("aria-hidden", "true"); document.body.appendChild(d); return d; };
@@ -5205,7 +5325,8 @@ function setupGlow() {
   const draw = () => {
     frame = 0;
     if (!pos) { card.classList.remove("on"); btn.classList.remove("on"); return; }
-    const t = document.elementFromPoint(pos.x, pos.y);
+    let t = document.elementFromPoint(pos.x, pos.y);
+    if (t && t.closest(NO_GLOW)) t = null;
     const b = t && t.closest(GLOW_BTN), c = t && t.closest(GLOW_CARD);
     place(btn, b && !b.disabled ? b : null);
     place(card, c);
@@ -5499,11 +5620,13 @@ function fillDocs(box, list, empty) {
 
 /* The How to use guide as a side panel: groups that fold (remembered), a compact rail of initials, one section at a time
    with previous and next. app.js draws the guide; this rearranges it each time it's drawn. */
-const GUIDE_GROUPS = [["Get set up", ["start", "mode", "resume", "tracker"]], ["Find and apply", ["find", "apply", "offers"]], ["More", []]];
+const GUIDE_GROUPS = [["Get set up", ["start", "mode", "freechat", "local", "resume", "tracker"]], ["Find and apply", ["find", "apply"]], ["More", []]];
 function buildGuidePanel(root) {
   const g = root.querySelector(".guide"), toc = g && g.querySelector(".gtoc"), body = g && g.querySelector(".gbody");
   if (!g || !toc || !body || g.dataset.panel) return;
   g.dataset.panel = "1";
+  const sub = root.querySelector(".guidehead p");   // this guide has no screenshots yet
+  if (sub) sub.textContent = "Set it up from scratch in about five minutes, then find jobs and apply. Pick a section on the left.";
   const secs = [...body.querySelectorAll(".gsec")].map(s => ({ id: s.id.replace(/^g-/, ""), el: s,
     title: (s.querySelector("h3") ? s.querySelector("h3").textContent.replace(/^\d+/, "") : s.id).trim(), steps: s.querySelectorAll(".gsteps > li").length }));
   if (!secs.length) return;
@@ -5517,8 +5640,8 @@ function buildGuidePanel(root) {
   if (pref("jobline-guide-compact", "") === "1") g.classList.add("compact");
   const panel = document.createElement("nav");
   panel.className = "gpanel"; panel.setAttribute("aria-label", "Guide sections");
-  panel.innerHTML = `<div class="gtools"><button class="btn small ghost" type="button" data-gcompact aria-pressed="${g.classList.contains("compact")}" title="Compact"><span class="glabel">Compact</span><span aria-hidden="true">⇤</span></button>`
-    + `<button class="btn small ghost" type="button" data-gall="open">Expand</button><button class="btn small ghost" type="button" data-gall="close">Collapse</button></div>`
+  panel.innerHTML = `<div class="gtools"><button class="gtool gcompact" type="button" data-gcompact aria-pressed="${g.classList.contains("compact")}" title="Make this panel narrow, or wide again"><span class="garrow" aria-hidden="true">⇤</span><span class="glabel">Compact</span></button>`
+    + `</div>`
     + groups.map(([name, list]) => `<div class="ggroup${closed.has(name) ? " closed" : ""}" data-group="${esc(name)}"><button class="ghead" type="button" aria-expanded="${!closed.has(name)}">`
       + `<span aria-hidden="true">${closed.has(name) ? "▸" : "▾"}</span>${esc(name)}<span class="gcount">${list.length}</span></button>`
       + list.map(s => `<button class="gitem" type="button" data-g="${esc(s.id)}" title="${esc(s.title)}"><span class="gini" aria-hidden="true">${esc(ini(s.title))}</span><span class="glabel">${esc(s.title)}</span><span class="gn">${s.steps}</span></button>`).join("")
@@ -5547,7 +5670,6 @@ function buildGuidePanel(root) {
     if (shut) closed.add(name); else closed.delete(name);
   };
   panel.querySelectorAll(".ghead").forEach(h => h.onclick = () => { const grp = h.parentElement; fold(grp, !grp.classList.contains("closed")); saveClosed(); });
-  panel.querySelectorAll("[data-gall]").forEach(b => b.onclick = () => { panel.querySelectorAll(".ggroup").forEach(grp => fold(grp, b.dataset.gall === "close")); saveClosed(); });
   panel.querySelectorAll(".gitem").forEach(b => b.onclick = () => show(b.dataset.g, false));
   panel.querySelector("[data-gcompact]").onclick = e => {
     const on = g.classList.toggle("compact");
