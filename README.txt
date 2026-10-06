@@ -17,6 +17,10 @@ What's different from the desktop app
   API keys, AI web search, the automatic job finder and the link check need the desktop app.
 - Cover letters and resumes are made as Word files and PDFs and kept with each job. Download them,
   or open "Open folder" on a job to see everything kept for it.
+- In Chrome and Edge you can also save your files to a folder on your computer: on the Resume tab,
+  press Choose folder. Job Line makes three folders in it: Job tracker files (saved there as
+  you work), Custom resumes and Cover letters (each as a Word file and a PDF). The browser asks
+  again on a later visit before Job Line can write to it.
 - The first time you open a spreadsheet, a Word file or a PDF, the page loads the tools it needs from
   a public code library (cdnjs.cloudflare.com and cdn.jsdelivr.net). Your files aren't sent there.
 
