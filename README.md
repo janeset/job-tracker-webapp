@@ -9,6 +9,7 @@ Job tracker as one web page, hosted for free on GitHub Pages: nothing to install
 
 **[Watch the four-minute tour](guide/tutorial.mp4)**: every feature, with a voiceover, a made-up sample resume and a free AI chat.
 In the app it's the **Watch the tour** button at the top of every page.
+Short on time? **[Watch the 30-second preview](job-tracker-teaser.mp4)** for a quick look at what it does.
 
 Chrome and Edge work best; Firefox and Safari work too. The How to use guide (the **How to use** button) walks through
 every step, with the tour at the top.

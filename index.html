@@ -175,6 +175,7 @@ h1::before{content:"";width:22px;height:22px;border:1.5px solid var(--amber);bor
 .htour{display:grid;grid-template-columns:minmax(0,300px) 1fr;gap:20px;align-items:center;margin:16px 0}
 .htour h3{margin:0 0 6px}
 .htour .note{margin:0 0 12px}
+.htourbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .htourpic{position:relative;display:block;padding:0;border:0;border-radius:12px;overflow:hidden;cursor:pointer;background:#0f1220;aspect-ratio:16/9}
 .htourpic img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .3s}
 .htourpic:hover img{transform:scale(1.03)}
@@ -5079,6 +5080,8 @@ const STATIC_GUIDE = [
       { text: "It follows one job search from start to finish: **choose how Job tracker uses AI**, **add a resume**, **find jobs** with a free AI chat, **craft an ATS-ready resume** and a **cover letter**, **prepare for the interview**, and **keep your files** safe. The sections below go through each step in detail.",
         video: "tutorial.mp4", poster: "tutorial.jpg", caption: "Job tracker tour, about 4 minutes, with a voiceover, subtitles and background music." },
       { text: "Watch it any time with **Watch the tour** at the top of every page. New here? Home shows it too, above the first steps." },
+      { text: "Short on time? The **30-second preview** shows what Job tracker does in one go: find jobs that fit, keep every application in one place, tailor an ATS-ready resume and cover letter, and practise for the interview.",
+        video: "../job-tracker-teaser.mp4", poster: "teaser.jpg", caption: "Job tracker in 30 seconds, with a voiceover, subtitles and background music." },
     ] },
   { id: "start", title: "Start Job tracker",
     intro: "Job tracker is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.",
@@ -6416,22 +6419,35 @@ function effectiveTheme() {
 }
 const SUN = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1.75v1.5M8 12.75v1.5M1.75 8h1.5M12.75 8h1.5M3.6 3.6l1.05 1.05M11.35 11.35l1.05 1.05M3.6 12.4l1.05-1.05M11.35 4.65l1.05-1.05"/></svg>';
 const PLAY = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><circle cx="8" cy="8" r="6.25"/><path d="M6.6 5.5v5l4-2.5z" fill="currentColor"/></svg>';
-/* The four-minute tour (guide/tutorial.mp4) in a player of its own: from the header, the Home card and the guide. */
-function openTour() {
+/* The four-minute tour (guide/tutorial.mp4) and the 30-second teaser (job-tracker-teaser.mp4) in a player of their own:
+   the tour from the header, the Home card and the guide; the teaser from the Home card and the guide. */
+const VIDEOS = {
+  tour: { title: "Job tracker in four minutes", src: "guide/tutorial.mp4", poster: "guide/tutorial.jpg",
+    label: "Job tracker tour, with a voiceover, subtitles and background music",
+    note: "Every feature, with a made-up sample resume and a free AI chat. The subtitles are in the picture." },
+  teaser: { title: "Job tracker in 30 seconds", src: "job-tracker-teaser.mp4", poster: "guide/teaser.jpg",
+    label: "Job tracker in 30 seconds, with a voiceover, subtitles and background music",
+    note: "A quick look at what Job tracker does. The four-minute tour shows every step." }
+};
+function openTour(which = "tour") {
+  const v = VIDEOS[which] || VIDEOS.tour;
   let d = $("tourDlg");
   if (!d) {
-    document.body.insertAdjacentHTML("beforeend", `<dialog id="tourDlg" aria-labelledby="tourTitle"><div class="tourhead"><h2 id="tourTitle">Job tracker in four minutes</h2>
+    document.body.insertAdjacentHTML("beforeend", `<dialog id="tourDlg" aria-labelledby="tourTitle"><div class="tourhead"><h2 id="tourTitle"></h2>
       <button class="btn small" type="button" id="tourClose">Close</button></div>
-      <video id="tourVid" controls playsinline preload="none" poster="guide/tutorial.jpg" src="guide/tutorial.mp4" aria-label="Job tracker tour, with a voiceover, subtitles and background music"></video>
-      <p class="note">Every feature, with a made-up sample resume and a free AI chat. The subtitles are in the picture.</p></dialog>`);
+      <video id="tourVid" controls playsinline preload="none"></video>
+      <p class="note" id="tourNote"></p></dialog>`);
     d = $("tourDlg");
     $("tourClose").onclick = () => d.close();
     d.addEventListener("close", () => $("tourVid").pause());
   }
+  const vid = $("tourVid");
+  $("tourTitle").textContent = v.title; $("tourNote").textContent = v.note;
+  if (vid.getAttribute("src") !== v.src) { vid.poster = v.poster; vid.src = v.src; vid.setAttribute("aria-label", v.label); }
   d.showModal();
-  $("tourVid").play().catch(() => {});
+  vid.play().catch(() => {});
 }
-document.addEventListener("click", e => { if (e.target.closest && e.target.closest('[data-act="tour"]')) { e.preventDefault(); openTour(); } });
+document.addEventListener("click", e => { const b = e.target.closest && e.target.closest('[data-act="tour"],[data-act="teaser"]'); if (b) { e.preventDefault(); openTour(b.dataset.act); } });
 const COG = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M6.9 1.75h2.2l.35 1.7c.43.17.83.4 1.2.7l1.65-.55 1.1 1.9-1.3 1.15a5 5 0 0 1 0 1.4l1.3 1.15-1.1 1.9-1.65-.55c-.37.3-.77.53-1.2.7l-.35 1.7H6.9l-.35-1.7a4.9 4.9 0 0 1-1.2-.7l-1.65.55-1.1-1.9 1.3-1.15a5 5 0 0 1 0-1.4L2.6 5.5l1.1-1.9 1.65.55c.37-.3.77-.53 1.2-.7z"/><circle cx="8" cy="8" r="2"/></svg>';
 const MOON = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><path d="M13.25 9.6A5.5 5.5 0 0 1 6.4 2.75a5.5 5.5 0 1 0 6.85 6.85z"/></svg>';
 function setupLook() {
@@ -8514,7 +8530,8 @@ function renderHome(){
   // new here: the four-minute tour, above the steps (the header's Watch the tour button plays it any time)
   const tour=hasResume&&hasJobs?"":`<section class="panel htour"><button type="button" class="htourpic" data-act="tour" aria-label="Play the four-minute tour"><img src="guide/tutorial.jpg" alt=""><span class="htourplay" aria-hidden="true"></span></button>
     <div><h3>New here? Watch the four-minute tour</h3><p class="note">Every feature with a sample resume and a free AI chat: find jobs, tailor an ATS-ready resume, write a cover letter and prepare for the interview.</p>
-    <button class="btn primary small" type="button" data-act="tour">Watch the tour</button></div></section>`;
+    <div class="htourbtns"><button class="btn primary small" type="button" data-act="tour">Watch the tour</button>
+    <button class="btn small" type="button" data-act="teaser">Or a 30-second preview</button></div></div></section>`;
   el.innerHTML=`${tour}${steps}
   <div class="doors">
     <button type="button" class="door" data-go="search"><span class="go">${ARROW}</span><span class="dk">${icon("search")}Find jobs</span><span class="dn">${found||"New"}</span><span class="dl">${found?(found===1?"result waiting to review":"results waiting to review"):"roles to discover"}</span><span class="ds">${esc(SEARCH.webText())}</span></button>
