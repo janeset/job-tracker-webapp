@@ -5080,8 +5080,8 @@ const STATIC_GUIDE = [
       { text: "It follows one job search from start to finish: **choose how Job tracker uses AI**, **add a resume**, **find jobs** with a free AI chat, **craft an ATS-ready resume** and a **cover letter**, **prepare for the interview**, and **keep your files** safe. The sections below go through each step in detail.",
         video: "tutorial.mp4", poster: "tutorial.jpg", caption: "Job tracker tour, about 4 minutes, with a voiceover, subtitles and background music." },
       { text: "Watch it any time with **Watch the tour** at the top of every page. New here? Home shows it too, above the first steps." },
-      { text: "Short on time? The **30-second preview** shows what Job tracker does in one go: find jobs that fit, keep every application in one place, tailor an ATS-ready resume and cover letter, and practise for the interview.",
-        video: "../job-tracker-teaser.mp4", poster: "teaser.jpg", caption: "Job tracker in 30 seconds, with a voiceover, subtitles and background music." },
+      { text: "Short on time? The **one-minute preview** shows what Job tracker does in one go: find jobs that fit, keep every application in one place, get an ATS-ready resume tailored to each job, and prepare and practise for the interview.",
+        video: "../job-tracker-teaser.mp4", poster: "teaser.jpg", caption: "Job tracker in one minute, with a voiceover and subtitles." },
     ] },
   { id: "start", title: "Start Job tracker",
     intro: "Job tracker is one web page that runs in your browser. There's nothing to install, and everything you add stays in this browser, on this computer.",
@@ -6419,15 +6419,15 @@ function effectiveTheme() {
 }
 const SUN = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1.75v1.5M8 12.75v1.5M1.75 8h1.5M12.75 8h1.5M3.6 3.6l1.05 1.05M11.35 11.35l1.05 1.05M3.6 12.4l1.05-1.05M11.35 4.65l1.05-1.05"/></svg>';
 const PLAY = '<svg class="ic" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><circle cx="8" cy="8" r="6.25"/><path d="M6.6 5.5v5l4-2.5z" fill="currentColor"/></svg>';
-/* The four-minute tour (guide/tutorial.mp4) and the 30-second teaser (job-tracker-teaser.mp4) in a player of their own:
+/* The four-minute tour (guide/tutorial.mp4) and the one-minute teaser (job-tracker-teaser.mp4) in a player of their own:
    the tour from the header, the Home card and the guide; the teaser from the Home card and the guide. */
 const VIDEOS = {
   tour: { title: "Job tracker in four minutes", src: "guide/tutorial.mp4", poster: "guide/tutorial.jpg",
     label: "Job tracker tour, with a voiceover, subtitles and background music",
     note: "Every feature, with a made-up sample resume and a free AI chat. The subtitles are in the picture." },
-  teaser: { title: "Job tracker in 30 seconds", src: "job-tracker-teaser.mp4", poster: "guide/teaser.jpg",
-    label: "Job tracker in 30 seconds, with a voiceover, subtitles and background music",
-    note: "A quick look at what Job tracker does. The four-minute tour shows every step." }
+  teaser: { title: "Job tracker in one minute", src: "job-tracker-teaser.mp4", poster: "guide/teaser.jpg",
+    label: "Job tracker in one minute, with a voiceover and subtitles",
+    note: "A quick look at what Job tracker does. The subtitles are in the picture. The four-minute tour shows every step." }
 };
 function openTour(which = "tour") {
   const v = VIDEOS[which] || VIDEOS.tour;
@@ -8531,7 +8531,7 @@ function renderHome(){
   const tour=hasResume&&hasJobs?"":`<section class="panel htour"><button type="button" class="htourpic" data-act="tour" aria-label="Play the four-minute tour"><img src="guide/tutorial.jpg" alt=""><span class="htourplay" aria-hidden="true"></span></button>
     <div><h3>New here? Watch the four-minute tour</h3><p class="note">Every feature with a sample resume and a free AI chat: find jobs, tailor an ATS-ready resume, write a cover letter and prepare for the interview.</p>
     <div class="htourbtns"><button class="btn primary small" type="button" data-act="tour">Watch the tour</button>
-    <button class="btn small" type="button" data-act="teaser">Or a 30-second preview</button></div></div></section>`;
+    <button class="btn small" type="button" data-act="teaser">Or a one-minute preview</button></div></div></section>`;
   el.innerHTML=`${tour}${steps}
   <div class="doors">
     <button type="button" class="door" data-go="search"><span class="go">${ARROW}</span><span class="dk">${icon("search")}Find jobs</span><span class="dn">${found||"New"}</span><span class="dl">${found?(found===1?"result waiting to review":"results waiting to review"):"roles to discover"}</span><span class="ds">${esc(SEARCH.webText())}</span></button>
