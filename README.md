@@ -5,13 +5,13 @@ Job tracker as one web page, hosted for free on GitHub Pages: nothing to install
 **Open it:** once GitHub Pages is on (see [Publishing](#publishing-for-the-repository-owner)), the site is at
 `https://<your-github-name>.github.io/<repository-name>/`.
 
-[![Watch the four-minute tour](guide/tutorial.jpg)](https://janeset.github.io/job-tracker-webapp/guide/tutorial.mp4)
+[![Watch the four-minute tour](guide/tutorial.jpg)](https://nebulai.dev/jtracker/guide/tutorial.mp4)
 
-**[Watch the four-minute tour](https://janeset.github.io/job-tracker-webapp/guide/tutorial.mp4)**: every feature, with a voiceover, a made-up sample resume and a free AI chat.
+**[Watch the four-minute tour](https://nebulai.dev/jtracker/guide/tutorial.mp4)**: every feature, with a voiceover, a made-up sample resume and a free AI chat.
 In the app it's the **Watch the tour** button at the top of every page.
-Short on time? **[Watch the one-minute preview](https://janeset.github.io/job-tracker-webapp/job-tracker-teaser.mp4)** for a quick look at what it does.
+Short on time? **[Watch the one-minute preview](https://nebulai.dev/jtracker/job-tracker-teaser.mp4)** for a quick look at what it does.
 
-[![Watch the one-minute preview](guide/teaser.jpg)](https://janeset.github.io/job-tracker-webapp/job-tracker-teaser.mp4)
+[![Watch the one-minute preview](guide/teaser.jpg)](https://nebulai.dev/jtracker/job-tracker-teaser.mp4)
 
 Chrome and Edge work best; Firefox and Safari work too. The How to use guide (the **How to use** button) walks through
 every step, with the tour at the top.
